@@ -1,11 +1,6 @@
 # UrlValidator
 
-Welcome to your new gem! In this directory, you'll find the files you need to 
-be able to package up your Ruby library into a gem. Put your Ruby code in the 
-file `lib/url_validator`. To experiment with that code, run `bin/console` for 
-an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Validate URL formats in ActiveModels.
 
 ## Installation
 
@@ -25,7 +20,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Add the following to your model:
+
+```ruby
+validates :my_url_attribute, url: true
+```
 
 ## Development
 
