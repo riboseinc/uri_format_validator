@@ -16,7 +16,7 @@ module ActiveModel
       end
 
       def validate_each(record, attribute, value)
-        unless value.slice(URI::regexp(schemes))
+        unless value.to_s.slice(URI::regexp(schemes))
           record.errors[attribute] << options[:message]
           return
         end

@@ -13,7 +13,13 @@ RSpec.describe UrlValidator do
 
   context "when url field is empty" do
     it "fails with default message" do
-      post.url = 'http://google'
+      post.url = ''
+      expect(post.valid?).to be false
+      expect(post.errors.first).to eq([:url, 'is not a valid URL'])
+    end
+
+    it "fails for nil values" do
+      post.url = nil
       expect(post.valid?).to be false
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
     end
