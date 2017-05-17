@@ -1,0 +1,118 @@
+= Roadmap
+
+== Basic options
+
+=== Examples
+
+  # default case
+  validates :my_url, :url => true
+
+  # allow nil
+  validates :my_url, :url => {allow_nil: true}
+
+  # allow blank
+  validates :my_url, :url => {allow_blank: true}
+
+== URL
+
+We'd like url_validator to support
+https://tools.ietf.org/html/rfc3986#appendix-B[RFC 3986],
+with the option to impose a constraint on the URI scheme, e.g. to only `http` & 
+`https`.
+
+Next step could introduce options to impose constraints on these as well:
+
+  authority = $4
+  path      = $5
+  query     = $7
+  fragment  = $9
+
+NOTE: _Copied from https://tools.ietf.org/html/rfc3986#appendix-B[RFC 3986]_
+
+=== Constraints
+
+Constraints for the above fields (`authority`, `path`, `query`, `fragment`) 
+could be either presence or a match.
+
+=== Authority
+
+Within the `authority` portion, the following could be made optional, 
+prohibited, etc.:
+
+* `username`
+* `password`
+* `port`
+
+==== Examples
+
+  # require absence of fragment
+  validates :my_url, :url => {fragment: false}
+
+  # require presence of path
+  validates :my_url, :url => {path: true}
+
+  # require authority format to match a regex
+  validates :my_url, :url => {authority: %r{(?:.+\.)*example.com}}
+
+=== Schemes
+
+To add an option to validate according to the list at:
+https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
+
+==== Examples
+
+  # match against the IANA list above
+  validates :my_url, :url => {scheme: true}
+
+  # match against a specific array
+  validates :my_url, :url => {scheme: %w[ftp http https]}
+
+  # match against a regex
+  validates :my_url, :url => {scheme: /myscheme[0-9]/}
+
+== Rails
+
+To support Rails 4 and 5.
+
+== Reachability
+
+To add an option to test for the given URL to see if it's reachable, or if the 
+domain is resolvable.
+
+=== Examples
+
+  # domain name resolvable
+  validates :my_url, :url => {resolvable: true}
+
+  # host is reachable
+  validates :my_url, :url => {reachable: true}
+
+  # full URL document returns 2xx HTTP status code
+  validates :my_url, :url => {retreivable: true}
+
+
+== Reserved
+
+* `.test`
+* `.example`
+* `.invalid`
+* `.localhost`
+
+http://www.faqs.org/rfcs/rfc2606.html
+
+=== Examples
+
+  # allow reserved authorities to be entered
+  validates :my_url, :url => {reserved: true}
+
+  # disallow reserved authorities to be entered
+  validates :my_url, :url => {reserved: false}
+
+== I18n
+
+To internationalize the error message strings to `de`, `en-UK`, `en-US`, `es`, 
+`fr`, `ja`, `ko`, `nl`, `pt-BR`, `ru`, `zh-CN`, `zh-TW`, etc.
+
+== Travis CI
+
+Add Travis CI badge to `README`.
