@@ -14,13 +14,13 @@ RSpec.describe UrlValidator do
   context "when url field is empty" do
     it "fails with default message" do
       post.url = ''
-      expect(post.valid?).to be false
+      expect(post).to_not be_valid
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
     end
 
     it "fails for nil values" do
       post.url = nil
-      expect(post.valid?).to be false
+      expect(post).to_not be_valid
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
     end
   end
@@ -43,7 +43,7 @@ RSpec.describe UrlValidator do
     valid_urls.each do |url|
       it "accept valid url: #{url}" do
         post.url = url
-        expect(post.valid?).to be true
+        expect(post).to be_valid
         expect(post.errors.count).to eq(0)
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe UrlValidator do
     invalid_urls.each do |url|
       it "reject invalid url: #{url}" do
         post.url = url
-        expect(post.valid?).to be false
+        expect(post).to_not be_valid
       end
     end
 
