@@ -4,28 +4,47 @@ class Post
   include ActiveModel::Validations
   include ActiveModel::Validations::Callbacks
   attr_accessor :url
-
-  validates :url, url: true
 end
 
 RSpec.describe UrlValidator do
   let(:post) {Post.new}
+  after do
+    Post.clear_validators!
+  end
 
   context "when url field is empty" do
     it "fails with default message" do
+      Post.validates_url_of :url
       post.url = ''
       expect(post).to_not be_valid
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
     end
 
     it "fails for nil values" do
+      Post.validates_url_of :url
       post.url = nil
       expect(post).to_not be_valid
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
     end
+
+    it "pass if accept nil values" do
+      Post.validates_url_of(:url, allow_nil: true)
+      post.url = nil
+      expect(post).to be_valid
+    end
+
+    it "pass if accept blank values" do
+      Post.validates_url_of(:url, allow_blank: true)
+      post.url = ''
+      expect(post).to be_valid
+    end
   end
 
   context "when url is present" do
+    before do
+      Post.validates_url_of :url
+    end
+
     valid_urls = [
       'http://google.com',
       'https://google.com',

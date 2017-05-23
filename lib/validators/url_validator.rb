@@ -33,5 +33,16 @@ module ActiveModel
         /^#{protocol}[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$/iux
       end
     end
+
+    module HelperMethods
+      # Encapsulates the pattern of wanting to validate an URL.
+      #
+      #   class Post < ActiveRecord::Base
+      #     validates_url_of :permalink
+      #   end
+      def validates_url_of(*attr_names)
+        validates_with UrlValidator, _merge_attributes(attr_names)
+      end
+    end
   end
 end
