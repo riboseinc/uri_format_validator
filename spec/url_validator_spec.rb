@@ -26,31 +26,30 @@ RSpec.describe UrlValidator do
   end
 
   context "when url is present" do
-    it "accept valid urls" do
-      valid_urls = [
-        'http://google.com',
-        'https://google.com',
-        'http://www.google.com',
-        'http://goo-gle.com',
-        'http://1234.com',
-        'http://google.uk'
-      ]
+    valid_urls = [
+      'http://google.com',
+      'https://google.com',
+      'http://www.google.com',
+      'http://goo-gle.com',
+      'http://1234.com',
+      'http://google.uk'
+    ]
+    invalid_urls = [
+      'google.com',
+      'http://google',
+      'http://google.looooongltd'
+    ]
 
-      valid_urls.each do |url|
+    valid_urls.each do |url|
+      it "accept valid url: #{url}" do
         post.url = url
         expect(post.valid?).to be true
         expect(post.errors.count).to eq(0)
       end
     end
 
-    it "reject invalid urls" do
-      invalid_urls = [
-        'google.com',
-        'http://google',
-        'http://google.looooongltd'
-      ]
-
-      invalid_urls.each do |url|
+    invalid_urls.each do |url|
+      it "reject invalid url: #{url}" do
         post.url = url
         expect(post.valid?).to be false
       end
