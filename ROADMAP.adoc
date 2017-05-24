@@ -5,13 +5,13 @@
 === Examples
 
   # default case
-  validates :my_url, :url => true
+  validates :my_url, url: true
 
   # allow nil
-  validates :my_url, :url => {allow_nil: true}
+  validates :my_url, url: {allow_nil: true}
 
   # allow blank
-  validates :my_url, :url => {allow_blank: true}
+  validates :my_url, url: {allow_blank: true}
 
 == URL
 
@@ -46,13 +46,13 @@ prohibited, etc.:
 ==== Examples
 
   # require absence of fragment
-  validates :my_url, :url => {fragment: false}
+  validates :my_url, url: {fragment: false}
 
   # require presence of path
-  validates :my_url, :url => {path: true}
+  validates :my_url, url: {path: true}
 
   # require authority format to match a regex
-  validates :my_url, :url => {authority: %r{(?:.+\.)*example.com}}
+  validates :my_url, url: {authority: %r{(?:.+\.)*example.com}}
 
 === Schemes
 
@@ -62,13 +62,13 @@ https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
 ==== Examples
 
   # match against the IANA list above
-  validates :my_url, :url => {scheme: true}
+  validates :my_url, url: {scheme: true}
 
   # match against a specific array
-  validates :my_url, :url => {scheme: %w[ftp http https]}
+  validates :my_url, url: {scheme: %w[ftp http https]}
 
   # match against a regex
-  validates :my_url, :url => {scheme: /myscheme[0-9]/}
+  validates :my_url, url: {scheme: /myscheme[0-9]/}
 
 == Rails
 
@@ -82,13 +82,13 @@ domain is resolvable.
 === Examples
 
   # domain name resolvable
-  validates :my_url, :url => {resolvable: true}
+  validates :my_url, url: {resolvable: true}
 
   # host is reachable
-  validates :my_url, :url => {reachable: true}
+  validates :my_url, url: {reachable: true}
 
   # full URL document returns 2xx HTTP status code
-  validates :my_url, :url => {retreivable: true}
+  validates :my_url, url: {retreivable: true}
 
 
 == Reserved
@@ -103,10 +103,10 @@ http://www.faqs.org/rfcs/rfc2606.html
 === Examples
 
   # allow reserved authorities to be entered
-  validates :my_url, :url => {reserved: true}
+  validates :my_url, url: {reserved: true}
 
   # disallow reserved authorities to be entered
-  validates :my_url, :url => {reserved: false}
+  validates :my_url, url: {reserved: false}
 
 == I18n
 
