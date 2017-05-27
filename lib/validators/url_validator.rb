@@ -24,9 +24,40 @@ module ActiveModel
         unless value =~ regexp
           record.errors[attribute] << options[:message]
         end
+
+        url = URI(value)
+        ok = true
+
+        ok &&= validate_path(options[:path], url.path) if options.has_key?(:path)
+        ok &&= validate_query(options[:query], url.query) if options.has_key?(:query)
+        ok &&= validate_fragment(options[:fragment], url.fragment) if options.has_key?(:fragment)
+
+        record.errors[attribute] << options[:message] unless ok
       end
 
       private
+
+      def validate_path option, path
+        if option == true
+          return false if path == '/' || path == ''
+        end
+        if option == false
+          return false unless path == '/' || path == ''
+        end
+        if option.is_a?(Regexp)
+          return false unless path =~ option
+        end
+        true
+      end
+
+      def validate_query option, query
+        query.present? == option
+      end
+
+      def validate_fragment option, fragment
+        fragment.present? == option
+      end
+
 
       def regexp
         protocol = "(#{schemes.join('|')})://"

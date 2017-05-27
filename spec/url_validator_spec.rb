@@ -73,6 +73,113 @@ RSpec.describe UrlValidator do
         expect(post).to_not be_valid
       end
     end
-
   end
+
+  context "options for 'path'" do
+    context "when value is true" do
+      it "check for path presence" do
+        post.url = 'http://example.com/some/path'
+        Post.validates_url_of :url, path: true
+        expect(post).to be_valid
+      end
+
+      it "reject missing path" do
+        post.url = 'http://example.com/'
+        Post.validates_url_of :url, path: true
+        expect(post).to_not be_valid
+      end
+    end
+
+
+    context "when value is false" do
+      it "check for path ausence" do
+        post.url = 'http://example.com/some/path'
+        Post.validates_url_of :url, path: false
+        expect(post).to_not be_valid
+      end
+
+      it "reject path presence" do
+        post.url = 'http://example.com/'
+        Post.validates_url_of :url, path: false
+        expect(post).to be_valid
+      end
+    end
+
+    context "when value is a regexp" do
+      it "check for path match" do
+        post.url = 'http://example.com/some/path'
+        Post.validates_url_of :url, path: /path/
+        expect(post).to be_valid
+      end
+
+      it "reject missing path" do
+        post.url = 'http://example.com/'
+        Post.validates_url_of :url, path: /notfound/
+        expect(post).to_not be_valid
+      end
+    end
+  end
+
+  context "options for 'query'" do
+    context "when value is true" do
+      it "check for query presence" do
+        post.url = 'http://example.com/?q=query'
+        Post.validates_url_of :url, query: true
+        expect(post).to be_valid
+      end
+
+      it "reject missing query" do
+        post.url = 'http://example.com/'
+        Post.validates_url_of :url, query: true
+        expect(post).to_not be_valid
+      end
+    end
+
+
+    context "when value is false" do
+      it "check for query ausence" do
+        post.url = 'http://example.com/?q=query'
+        Post.validates_url_of :url, query: false
+        expect(post).to_not be_valid
+      end
+
+      it "reject query presence" do
+        post.url = 'http://example.com/'
+        Post.validates_url_of :url, query: false
+        expect(post).to be_valid
+      end
+    end
+  end
+
+  context "options for 'fragment'" do
+    context "when value is true" do
+      it "check for fragment presence" do
+        post.url = 'http://example.com/#fragment'
+        Post.validates_url_of :url, fragment: true
+        expect(post).to be_valid
+      end
+
+      it "reject missing fragment" do
+        post.url = 'http://example.com/'
+        Post.validates_url_of :url, fragment: true
+        expect(post).to_not be_valid
+      end
+    end
+
+
+    context "when value is false" do
+      it "check for fragment ausence" do
+        post.url = 'http://example.com/#fragment'
+        Post.validates_url_of :url, fragment: false
+        expect(post).to_not be_valid
+      end
+
+      it "reject fragment presence" do
+        post.url = 'http://example.com/'
+        Post.validates_url_of :url, fragment: false
+        expect(post).to be_valid
+      end
+    end
+  end
+
 end
