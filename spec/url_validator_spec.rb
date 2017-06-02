@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 class Post
   include ActiveModel::Validations
@@ -9,23 +9,23 @@ class Post
 end
 
 RSpec.describe UrlValidator do
-  let(:post) {Post.new}
+  let(:post) { Post.new }
 
-  context "when url field is empty" do
-    it "fails with default message" do
+  context 'when url field is empty' do
+    it 'fails with default message' do
       post.url = ''
       expect(post).to_not be_valid
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
     end
 
-    it "fails for nil values" do
+    it 'fails for nil values' do
       post.url = nil
       expect(post).to_not be_valid
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
     end
   end
 
-  context "when url is present" do
+  context 'when url is present' do
     valid_urls = [
       'http://google.com',
       'https://google.com',
@@ -54,6 +54,5 @@ RSpec.describe UrlValidator do
         expect(post).to_not be_valid
       end
     end
-
   end
 end
