@@ -1,5 +1,7 @@
 # UrlValidator
 
+[![Build Status](https://img.shields.io/travis/riboseinc/url_validator/master.svg)](https://travis-ci.org/riboseinc/url_validator)
+
 Validate URL formats in ActiveModels.
 
 ## Installation
