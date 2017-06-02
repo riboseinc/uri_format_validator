@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "url_validator"
   spec.version       = UrlValidator::VERSION
   spec.authors       = ["Ribose Inc."]
-  spec.email         = ["info@ribose.com"]
+  spec.email         = ["open.source@ribose.com"]
 
   spec.summary       = %q{Library for validating urls in Rails}
   spec.description   = %q{Library for validating urls in Rails}
