@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 class Post
   include ActiveModel::Validations
@@ -7,6 +7,7 @@ class Post
 end
 
 RSpec.describe UrlValidator do
+
   let(:post) {Post.new}
   after do
     Post.clear_validators!
@@ -15,13 +16,16 @@ RSpec.describe UrlValidator do
   context "when url field is empty" do
     it "fails with default message" do
       Post.validates_url_of :url
+
       post.url = ''
       expect(post).to_not be_valid
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
     end
 
+
     it "fails for nil values" do
       Post.validates_url_of :url
+
       post.url = nil
       expect(post).to_not be_valid
       expect(post.errors.first).to eq([:url, 'is not a valid URL'])
@@ -39,6 +43,7 @@ RSpec.describe UrlValidator do
       expect(post).to be_valid
     end
   end
+
 
   context "when url is present" do
     before do
