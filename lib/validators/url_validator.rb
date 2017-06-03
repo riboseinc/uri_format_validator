@@ -23,16 +23,13 @@ module ActiveModel
           return
         end
 
-        unless value =~ regexp
-          record.errors[attribute] << options[:message]
-        end
+        record.errors[attribute] << options[:message] unless value =~ regexp
 
         url = URI(value)
-
         valid = catch(:invalid) do
-          validate_path(options[:path], url.path) if options.has_key?(:path)
-          validate_query(options[:query], url.query) if options.has_key?(:query)
-          validate_fragment(options[:fragment], url.fragment) if options.has_key?(:fragment)
+          validate_path(options[:path], url.path) if options.key?(:path)
+          validate_query(options[:query], url.query) if options.key?(:query)
+          validate_fragment(options[:fragment], url.fragment) if options.key?(:fragment)
           true # valid
         end
 
@@ -41,17 +38,17 @@ module ActiveModel
 
       private
 
-      def validate_path option, path
+      def validate_path(option, path)
         throw :invalid if option == true && path == '/' || path == ''
         throw :invalid if option == false && path != '/' && path != ''
         throw :invalid if option.is_a?(Regexp) && path !~ option
       end
 
-      def validate_query option, query
+      def validate_query(option, query)
         throw :invalid unless query.present? == option
       end
 
-      def validate_fragment option, fragment
+      def validate_fragment(option, fragment)
         throw :invalid unless fragment.present? == option
       end
 
