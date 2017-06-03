@@ -28,36 +28,31 @@ module ActiveModel
         end
 
         url = URI(value)
-        ok = true
 
-        ok &&= validate_path(options[:path], url.path) if options.has_key?(:path)
-        ok &&= validate_query(options[:query], url.query) if options.has_key?(:query)
-        ok &&= validate_fragment(options[:fragment], url.fragment) if options.has_key?(:fragment)
+        valid = catch(:invalid) do
+          validate_path(options[:path], url.path) if options.has_key?(:path)
+          validate_query(options[:query], url.query) if options.has_key?(:query)
+          validate_fragment(options[:fragment], url.fragment) if options.has_key?(:fragment)
+          true # valid
+        end
 
-        record.errors[attribute] << options[:message] unless ok
+        record.errors[attribute] << options[:message] unless valid
       end
 
       private
 
       def validate_path option, path
-        if option == true
-          return false if path == '/' || path == ''
-        end
-        if option == false
-          return false unless path == '/' || path == ''
-        end
-        if option.is_a?(Regexp)
-          return false unless path =~ option
-        end
-        true
+        throw :invalid if option == true && path == '/' || path == ''
+        throw :invalid if option == false && path != '/' && path != ''
+        throw :invalid if option.is_a?(Regexp) && path !~ option
       end
 
       def validate_query option, query
-        query.present? == option
+        throw :invalid unless query.present? == option
       end
 
       def validate_fragment option, fragment
-        fragment.present? == option
+        throw :invalid unless fragment.present? == option
       end
 
       def regexp
