@@ -94,7 +94,7 @@ RSpec.describe UrlValidator do
     end
 
     context 'when value is false' do
-      it 'check for path ausence' do
+      it 'check for path absence' do
         post.url = 'http://example.com/some/path'
         Post.validates_url_of :url, path: false
         expect(post).to_not be_valid
@@ -138,7 +138,7 @@ RSpec.describe UrlValidator do
     end
 
     context 'when value is false' do
-      it 'check for query ausence' do
+      it 'check for query absence' do
         post.url = 'http://example.com/?q=query'
         Post.validates_url_of :url, query: false
         expect(post).to_not be_valid
@@ -168,7 +168,7 @@ RSpec.describe UrlValidator do
     end
 
     context 'when value is false' do
-      it 'check for fragment ausence' do
+      it 'check for fragment absence' do
         post.url = 'http://example.com/#fragment'
         Post.validates_url_of :url, fragment: false
         expect(post).to_not be_valid
