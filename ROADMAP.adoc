@@ -108,7 +108,7 @@ domain is resolvable.
   validates :my_url, url: {reachable: true}
 
   # full URL document returns 2xx HTTP status code
-  validates :my_url, url: {retreivable: true}
+  validates :my_url, url: {retrievable: true}
 ----
 
 
