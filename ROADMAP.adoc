@@ -137,6 +137,6 @@ http://www.faqs.org/rfcs/rfc2606.html
 To internationalize the error message strings to `de`, `en-UK`, `en-US`, `es`, 
 `fr`, `ja`, `ko`, `nl`, `pt-BR`, `ru`, `zh-CN`, `zh-TW`, etc.
 
-== Travis CI
+== (DONE) Travis CI
 
 Add Travis CI badge to `README`.
