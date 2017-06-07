@@ -63,7 +63,7 @@ RSpec.describe UrlValidator do
     ]
 
     valid_urls.each do |url|
-      it 'accept valid url: #{url}' do
+      it "accept valid url: #{url}" do
         post.url = url
         expect(post).to be_valid
         expect(post.errors.count).to eq(0)
@@ -71,14 +71,14 @@ RSpec.describe UrlValidator do
     end
 
     invalid_urls.each do |url|
-      it 'reject invalid url: #{url}' do
+      it "reject invalid url: #{url}" do
         post.url = url
         expect(post).to_not be_valid
       end
     end
   end
 
-  context 'options for \'path\'' do
+  context 'options for "path"' do
     context 'when value is true' do
       it 'check for path presence' do
         post.url = 'http://example.com/some/path'
@@ -122,7 +122,7 @@ RSpec.describe UrlValidator do
     end
   end
 
-  context 'options for \'query\'' do
+  context 'options for "query"' do
     context 'when value is true' do
       it 'check for query presence' do
         post.url = 'http://example.com/?q=query'
@@ -152,7 +152,7 @@ RSpec.describe UrlValidator do
     end
   end
 
-  context 'options for \'fragment\'' do
+  context 'options for "fragment"' do
     context 'when value is true' do
       it 'check for fragment presence' do
         post.url = 'http://example.com/#fragment'
