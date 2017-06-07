@@ -23,10 +23,9 @@ module ActiveModel
           return
         end
 
-        record.errors[attribute] << options[:message] unless value =~ regexp
-
         url = URI(value)
         valid = catch(:invalid) do
+          validate_domain(value)
           validate_path(options[:path], url.path) if options.key?(:path)
           validate_query(options[:query], url.query) if options.key?(:query)
           validate_fragment(options[:fragment], url.fragment) if options.key?(:fragment)
@@ -37,6 +36,10 @@ module ActiveModel
       end
 
       private
+
+      def validate_domain(url)
+        throw :invalid unless url =~ regexp
+      end
 
       def validate_path(option, path)
         throw :invalid if option == true && path == '/' || path == ''
