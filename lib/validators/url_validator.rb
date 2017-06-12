@@ -8,24 +8,34 @@ module ActiveModel
     # TODO: documentation
     #
     class UrlValidator < ::ActiveModel::EachValidator
-      attr_accessor :schemes
+
+      SCHEMES = %w[
+        aaa aaas about acap acct cap cid coap coaps crid data dav dict dns
+        example file ftp geo go gopher h323 http https iax icap im imap info ipp
+        ipps iris iris.beep iris.lwz iris.xpc iris.xpcs jabber ldap mailto mid
+        msrp msrps mtqp mupdate news nfs ni nih nntp opaquelocktoken pkcs11 pop
+        pres reload rtsp rtsps rtspu service session shttp sieve sip sips sms
+        snmp soap.beep soap.beeps stun stuns tag tel telnet tftp thismessage tip
+        tn3270 turn turns tv urn vemmi vnc ws wss xcon xcon-userid xmlrpc.beep
+        xmlrpc.beeps xmpp z39.50r z39.50s
+      ]
 
       def initialize(options)
-        options[:schemes] = %w[http https]
+        @schemes = case options[:scheme]
+          when true then SCHEMES
+          when nil then %w[http https]
+          else options[:scheme]
+        end
+
         options.reverse_merge!(message: 'is not a valid URL')
-        @schemes = options[:schemes]
         super(options)
       end
 
       def validate_each(record, attribute, value)
-        unless value.to_s.slice(URI.regexp(schemes))
-          record.errors[attribute] << options[:message]
-          return
-        end
-
-        url = URI(value)
+        url = URI(value.to_s)
         valid = catch(:invalid) do
           validate_domain(value)
+          validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
           validate_path(options[:path], url.path) if options.key?(:path)
           validate_query(options[:query], url.query) if options.key?(:query)
           validate_fragment(options[:fragment], url.fragment) if options.key?(:fragment)
@@ -39,6 +49,14 @@ module ActiveModel
 
       def validate_domain(url)
         throw :invalid unless url =~ regexp
+      end
+
+      def validate_scheme(_option, scheme)
+        if @schemes.is_a?(Regexp)
+          throw :invalid if scheme !~ @schemes
+        else
+          throw :invalid unless @schemes.include?(scheme)
+        end
       end
 
       def validate_path(option, path)
@@ -56,7 +74,12 @@ module ActiveModel
       end
 
       def regexp
-        protocol = "(#{schemes.join('|')})://"
+        if @schemes.is_a?(Regexp)
+          protocol = "(#{@schemes.source})://"
+        else
+          protocol = "(#{@schemes.join('|')})://"
+        end
+
         %r{^#{
           protocol
         }[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$}iux
