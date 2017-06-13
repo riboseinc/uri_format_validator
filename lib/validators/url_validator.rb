@@ -1,5 +1,4 @@
 require 'active_model'
-require 'active_support/core_ext'
 require 'uri'
 
 module ActiveModel
@@ -12,7 +11,7 @@ module ActiveModel
 
       def initialize(options)
         options[:schemes] = %w[http https]
-        options.reverse_merge!(message: 'is not a valid URL')
+        options[:message] ||= I18n.t("errors.messages.invalid_url")
         @schemes = options[:schemes]
         super(options)
       end
