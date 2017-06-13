@@ -8,7 +8,6 @@ module ActiveModel
     # TODO: documentation
     #
     class UrlValidator < ::ActiveModel::EachValidator
-
       SCHEMES = %w[
         aaa aaas about acap acct cap cid coap coaps crid data dav dict dns
         example file ftp geo go gopher h323 http https iax icap im imap info ipp
@@ -18,14 +17,15 @@ module ActiveModel
         snmp soap.beep soap.beeps stun stuns tag tel telnet tftp thismessage tip
         tn3270 turn turns tv urn vemmi vnc ws wss xcon xcon-userid xmlrpc.beep
         xmlrpc.beeps xmpp z39.50r z39.50s
-      ]
+      ].freeze
 
       def initialize(options)
-        @schemes = case options[:scheme]
+        @schemes =
+          case options[:scheme]
           when true then SCHEMES
           when nil then %w[http https]
           else options[:scheme]
-        end
+          end
 
         options.reverse_merge!(message: 'is not a valid URL')
         super(options)
@@ -74,11 +74,12 @@ module ActiveModel
       end
 
       def regexp
-        if @schemes.is_a?(Regexp)
-          protocol = "(#{@schemes.source})://"
-        else
-          protocol = "(#{@schemes.join('|')})://"
-        end
+        protocol =
+          if @schemes.is_a?(Regexp)
+            "(#{@schemes.source})://"
+          else
+            "(#{@schemes.join('|')})://"
+          end
 
         %r{^#{
           protocol
