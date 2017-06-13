@@ -11,7 +11,7 @@ module ActiveModel
 
       def initialize(options)
         options[:schemes] = %w[http https]
-        options[:message] ||= I18n.t("errors.messages.invalid_url")
+        options[:message] ||= I18n.t('errors.messages.invalid_url')
         @schemes = options[:schemes]
         super(options)
       end
