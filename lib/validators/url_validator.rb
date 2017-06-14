@@ -1,5 +1,6 @@
 require 'active_model'
 require 'uri'
+require 'active_support/core_ext'
 
 module ActiveModel
   module Validations
