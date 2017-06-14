@@ -1,5 +1,4 @@
 require 'active_model'
-require 'active_support/core_ext'
 require 'uri'
 
 module ActiveModel
@@ -27,7 +26,7 @@ module ActiveModel
           else options[:scheme]
           end
 
-        options.reverse_merge!(message: 'is not a valid URL')
+        options.reverse_merge!(message: I18n.t('errors.messages.invalid_url'))
         super(options)
       end
 

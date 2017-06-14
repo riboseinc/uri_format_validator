@@ -28,6 +28,23 @@ Add the following to your model:
 validates :my_url_attribute, url: true
 ```
 
+## Error messages
+
+You can set the error message as an additional parameter
+
+```ruby
+validates :my_url_attribute, url: true, message: 'is not a valid URL'
+```
+
+or you can use locales:
+
+```yaml
+en:
+  errors:
+    messages:
+      invalid_url: 'is not a valid URL'
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run 
