@@ -78,6 +78,50 @@ RSpec.describe UrlValidator do
     end
   end
 
+  context 'options for "scheme"' do
+    context 'when value is true' do
+      it 'check for scheme match' do
+        post.url = 'telnet://www.example.com/'
+        Post.validates_url_of :url, scheme: true
+        expect(post).to be_valid
+      end
+
+      it 'reject wrong scheme' do
+        post.url = 'undefined://example.com/'
+        Post.validates_url_of :url, scheme: true
+        expect(post).to_not be_valid
+      end
+    end
+
+    context 'when value is a regexp' do
+      it 'check for scheme match' do
+        post.url = 'http://www.example.com/'
+        Post.validates_url_of :url, scheme: /http|https/
+        expect(post).to be_valid
+      end
+
+      it 'reject missing scheme' do
+        post.url = 'ftp://example.com/'
+        Post.validates_url_of :url, scheme: /http|https/
+        expect(post).to_not be_valid
+      end
+    end
+
+    context 'when value is an array' do
+      it 'check for scheme match' do
+        post.url = 'ftp://example.com/'
+        Post.validates_url_of :url, scheme: %w[http ftp]
+        expect(post).to be_valid
+      end
+
+      it 'reject missing scheme' do
+        post.url = 'telnet://google.com/'
+        Post.validates_url_of :url, scheme: %w[http ftp]
+        expect(post).to_not be_valid
+      end
+    end
+  end
+
   context 'options for "path"' do
     context 'when value is true' do
       it 'check for path presence' do
