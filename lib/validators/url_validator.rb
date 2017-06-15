@@ -26,7 +26,7 @@ module ActiveModel
           else options[:scheme]
           end
 
-        options.reverse_merge!(message: I18n.t('errors.messages.invalid_url'))
+        options[:message] ||= I18n.t('errors.messages.invalid_url')
         super(options)
       end
 
@@ -40,7 +40,8 @@ module ActiveModel
           validate_fragment(options[:fragment], url.fragment) if options.key?(:fragment)
           true # valid
         end
-
+      rescue URI::InvalidURIError
+      ensure
         record.errors[attribute] << options[:message] unless valid
       end
 

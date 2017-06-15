@@ -76,6 +76,12 @@ RSpec.describe UrlValidator do
         expect(post).to_not be_valid
       end
     end
+
+    it 'reject malformed strings' do
+      Post.validates_url_of :url
+      post.url = ' http://google.com '
+      expect(post).to_not be_valid
+    end
   end
 
   context 'options for "scheme"' do
