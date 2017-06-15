@@ -81,6 +81,7 @@ module ActiveModel
 
       def validate_authority(option, url)
         throw :invalid if option.is_a?(Regexp) && url.host !~ option
+        throw :invalid if option.is_a?(Array) && !option.include?(url.host)
       end
 
       def accept_relative_urls?

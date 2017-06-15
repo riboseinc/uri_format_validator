@@ -260,6 +260,20 @@ RSpec.describe UrlValidator do
         expect(post).to_not be_valid
       end
     end
+
+    context 'when value is an array' do
+      it 'check for authority match' do
+        post.url = 'http://example.com'
+        Post.validates_url_of :url, authority: %w[example.com google.com]
+        expect(post).to be_valid
+      end
+
+      it 'reject missing authority' do
+        post.url = 'http://example.com'
+        Post.validates_url_of :url, authority: %w[google.com]
+        expect(post).to_not be_valid
+      end
+    end
   end
 
 end
