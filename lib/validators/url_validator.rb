@@ -18,6 +18,9 @@ module ActiveModel
         xmlrpc.beeps xmpp z39.50r z39.50s
       ].freeze
 
+      # Examples: http://www.rubular.com/r/Xy4iNY2ztf
+      RESERVED_DOMAINS = /(\.(test|example|invalid|localhost)$)|((^|\.)example\.(...?)(\...)?$)/.freeze
+
       def initialize(options)
         @schemes =
           case options[:scheme]
@@ -82,6 +85,9 @@ module ActiveModel
       def validate_authority(option, url)
         throw :invalid if option.is_a?(Regexp) && url.host !~ option
         throw :invalid if option.is_a?(Array) && !option.include?(url.host)
+        if option.is_a?(Hash)
+          check_reserved_domains(url) if option[:reserved] == false
+        end
       end
 
       def accept_relative_urls?
@@ -90,6 +96,10 @@ module ActiveModel
 
       def validate_domain_absense(url)
         throw :invalid if url.host.present?
+      end
+
+      def check_reserved_domains url
+        throw :invalid if url.host =~ RESERVED_DOMAINS
       end
 
       def regexp
