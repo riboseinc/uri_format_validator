@@ -19,6 +19,9 @@ module ActiveModel
         xmlrpc.beeps xmpp z39.50r z39.50s
       ].freeze
 
+      # Examples: http://www.rubular.com/r/Xy4iNY2ztf
+      RESERVED_DOMAINS = /(\.(test|example|invalid|localhost)$)|((^|\.)example\.(...?)(\...)?$)/.freeze
+
       def initialize(options)
         @schemes =
           case options[:scheme]
@@ -27,21 +30,28 @@ module ActiveModel
           else options[:scheme]
           end
 
-        options.reverse_merge!(message: I18n.t('errors.messages.invalid_url'))
+        options[:message] ||= I18n.t('errors.messages.invalid_url')
         super(options)
       end
 
       def validate_each(record, attribute, value)
-        url = URI(value.to_s)
         valid = catch(:invalid) do
-          validate_domain(value)
-          validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
-          validate_path(options[:path], url.path) if options.key?(:path)
-          validate_query(options[:query], url.query) if options.key?(:query)
-          validate_fragment(options[:fragment], url.fragment) if options.key?(:fragment)
-          true # valid
+            url = URI(value.to_s)
+            if accept_relative_urls?
+              validate_domain_absense(url)
+            else
+              validate_domain(value)
+              validate_authority(options[:authority], url) if options.key?(:authority)
+              validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
+            end
+            validate_path(options[:path], url.path) if options.key?(:path)
+            validate_query(options[:query], url.query) if options.key?(:query)
+            validate_fragment(options[:fragment], url.fragment) if options.key?(:fragment)
+            true # valid
+          # end
         end
-
+      rescue URI::InvalidURIError
+      ensure
         record.errors[attribute] << options[:message] unless valid
       end
 
@@ -71,6 +81,26 @@ module ActiveModel
 
       def validate_fragment(option, fragment)
         throw :invalid unless fragment.present? == option
+      end
+
+      def validate_authority(option, url)
+        throw :invalid if option.is_a?(Regexp) && url.host !~ option
+        throw :invalid if option.is_a?(Array) && !option.include?(url.host)
+        if option.is_a?(Hash)
+          check_reserved_domains(url) if option[:reserved] == false
+        end
+      end
+
+      def accept_relative_urls?
+        options.key?(:authority) && options[:authority] == false
+      end
+
+      def validate_domain_absense(url)
+        throw :invalid if url.host.present?
+      end
+
+      def check_reserved_domains url
+        throw :invalid if url.host =~ RESERVED_DOMAINS
       end
 
       def regexp

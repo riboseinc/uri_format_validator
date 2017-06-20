@@ -76,6 +76,12 @@ RSpec.describe UrlValidator do
         expect(post).to_not be_valid
       end
     end
+
+    it 'reject malformed strings' do
+      Post.validates_url_of :url
+      post.url = ' http://google.com '
+      expect(post).to_not be_valid
+    end
   end
 
   context 'options for "scheme"' do
@@ -222,6 +228,58 @@ RSpec.describe UrlValidator do
         post.url = 'http://example.com/'
         Post.validates_url_of :url, fragment: false
         expect(post).to be_valid
+      end
+    end
+  end
+
+  context 'options for "authority"' do
+    context 'when value is false' do
+      it 'check for authority absence' do
+        post.url = '/relative/path?query=true'
+        Post.validates_url_of :url, authority: false
+        expect(post).to be_valid
+      end
+
+      it 'reject authority presence' do
+        post.url = 'http://example.com/relative/path'
+        Post.validates_url_of :url, authority: false
+        expect(post).to_not be_valid
+      end
+    end
+
+    context 'when value is a regexp' do
+      it 'check for authority match' do
+        post.url = 'http://example.com'
+        Post.validates_url_of :url, authority: /example.com/
+        expect(post).to be_valid
+      end
+
+      it 'reject missing authority' do
+        post.url = 'http://example.com'
+        Post.validates_url_of :url, authority: /google.com/
+        expect(post).to_not be_valid
+      end
+    end
+
+    context 'when value is an array' do
+      it 'check for authority match' do
+        post.url = 'http://example.com'
+        Post.validates_url_of :url, authority: %w[example.com google.com]
+        expect(post).to be_valid
+      end
+
+      it 'reject missing authority' do
+        post.url = 'http://example.com'
+        Post.validates_url_of :url, authority: %w[google.com]
+        expect(post).to_not be_valid
+      end
+    end
+
+    context 'options for "reserved: false"' do
+      it 'reject reserved domains' do
+        post.url = 'http://example.com'
+        Post.validates_url_of :url, authority: {reserved: false}
+        expect(post).to_not be_valid
       end
     end
   end
