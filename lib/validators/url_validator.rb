@@ -38,57 +38,56 @@ module ActiveModel
       end
 
       def validate_each(record, attribute, value)
-        valid = catch(:invalid) do
-            url = URI(value.to_s)
-            if accept_relative_urls?
-              validate_domain_absense(url)
-            else
-              validate_domain(value)
-              validate_authority(options[:authority], url) if options.key?(:authority)
-              validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
-            end
-            validate_path(options[:path], url.path) if options.key?(:path)
-            validate_query(options[:query], url.query) if options.key?(:query)
-            validate_fragment(options[:fragment], url.fragment) if options.key?(:fragment)
-            true # valid
-          # end
+        url = URI(value.to_s)
+
+        if accept_relative_urls?
+          validate_domain_absense(url)
+        else
+          validate_domain(value)
+          validate_authority(options[:authority], url)  if options.key?(:authority)
+          validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
         end
+
+        %i[path query fragment].each do |prop|
+          send(:"validate_#{prop}", options[prop], url.send(prop)) if options.key?(prop)
+        end
+
+        true
       rescue URI::InvalidURIError
-      ensure
-        record.errors[attribute] << options[:message] unless valid
+        record.errors[attribute] << options[:message]
       end
 
       private
 
       def validate_domain(url)
-        throw :invalid unless url =~ regexp
+        raise URI::InvalidURIError unless url =~ regexp
       end
 
       def validate_scheme(_option, scheme)
         if @schemes.is_a?(Regexp)
-          throw :invalid if scheme !~ @schemes
+          raise URI::InvalidURIError if scheme !~ @schemes
         else
-          throw :invalid unless @schemes.include?(scheme)
+          raise URI::InvalidURIError unless @schemes.include?(scheme)
         end
       end
 
       def validate_path(option, path)
-        throw :invalid if option == true && path == '/' || path == ''
-        throw :invalid if option == false && path != '/' && path != ''
-        throw :invalid if option.is_a?(Regexp) && path !~ option
+        raise URI::InvalidURIError if option == true  && path == '/' || path == ''
+        raise URI::InvalidURIError if option == false && path != '/' && path != ''
+        raise URI::InvalidURIError if option.is_a?(Regexp) && path !~ option
       end
 
       def validate_query(option, query)
-        throw :invalid unless query.present? == option
+        raise URI::InvalidURIError unless query.present? == option
       end
 
       def validate_fragment(option, fragment)
-        throw :invalid unless fragment.present? == option
+        raise URI::InvalidURIError unless fragment.present? == option
       end
 
       def validate_authority(option, url)
-        throw :invalid if option.is_a?(Regexp) && url.host !~ option
-        throw :invalid if option.is_a?(Array)  && !option.include?(url.host)
+        raise URI::InvalidURIError if option.is_a?(Regexp) && url.host !~ option
+        raise URI::InvalidURIError if option.is_a?(Array)  && !option.include?(url.host)
         check_reserved_domains(url) if option.is_a?(Hash) && option[:reserved] == false
       end
 
@@ -97,11 +96,11 @@ module ActiveModel
       end
 
       def validate_domain_absense(url)
-        throw :invalid if url.host.present?
+        raise URI::InvalidURIError if url.host.present?
       end
 
       def check_reserved_domains(url)
-        throw :invalid if url.host =~ RESERVED_DOMAINS
+        raise URI::InvalidURIError if url.host =~ RESERVED_DOMAINS
       end
 
       def regexp
