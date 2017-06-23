@@ -5,6 +5,3 @@ Metrics/BlockLength:
     - 'Rakefile'
     - '**/*.rake'
     - 'spec/**/*.rb'
-
-Style/PercentLiteralDelimiters:
-  enabled: false
