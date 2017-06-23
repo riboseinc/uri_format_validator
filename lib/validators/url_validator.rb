@@ -100,7 +100,7 @@ module ActiveModel
         throw :invalid if url.host.present?
       end
 
-      def check_reserved_domains url
+      def check_reserved_domains(url)
         throw :invalid if url.host =~ RESERVED_DOMAINS
       end
 
