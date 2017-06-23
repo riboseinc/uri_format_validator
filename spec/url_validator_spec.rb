@@ -278,7 +278,7 @@ RSpec.describe UrlValidator do
     context 'options for "reserved: false"' do
       it 'reject reserved domains' do
         post.url = 'http://example.com'
-        Post.validates_url_of :url, authority: {reserved: false}
+        Post.validates_url_of :url, authority: { reserved: false }
         expect(post).to_not be_valid
       end
     end
