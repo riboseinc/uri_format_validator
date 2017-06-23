@@ -20,7 +20,10 @@ module ActiveModel
       ].freeze
 
       # Examples: http://www.rubular.com/r/Xy4iNY2ztf
-      RESERVED_DOMAINS = /(\.(test|example|invalid|localhost)$)|((^|\.)example\.(...?)(\...)?$)/.freeze
+      RESERVED_DOMAINS = /
+        (\.(test|example|invalid|localhost)$)|
+        ((^|\.)example\.(...?)(\...)?$)
+      /x
 
       def initialize(options)
         @schemes =
