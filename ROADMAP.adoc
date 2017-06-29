@@ -20,7 +20,7 @@
 
 We'd like url_validator to support
 https://tools.ietf.org/html/rfc3986#appendix-B[RFC 3986],
-with the option to impose a constraint on the URI scheme, e.g. to only `http` & 
+with the option to impose a constraint on the URI scheme, e.g. to only `http` &
 `https`.
 
 Next step could introduce options to impose constraints on these as well:
@@ -34,12 +34,12 @@ NOTE: _Copied from https://tools.ietf.org/html/rfc3986#appendix-B[RFC 3986]_
 
 === Constraints
 
-Constraints for the above fields (`authority`, `path`, `query`, `fragment`) 
+Constraints for the above fields (`authority`, `path`, `query`, `fragment`)
 could be either presence or a match.
 
 === Authority
 
-Within the `authority` portion, the following could be made optional, 
+Within the `authority` portion, the following could be made optional,
 prohibited, etc.:
 
 * `username`
@@ -79,12 +79,20 @@ https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
 [source,ruby]
 ----
   # match against the IANA list above
-  validates :my_url, url: {scheme: true}
+  validates :my_url, url: {scheme: :all}
 
   # match against a specific array
+
+  # todo
+  # replace with "in" and symbols
+  # validates :my_url, url: {scheme: {in: [:ftp, :http, :https]}}
+
   validates :my_url, url: {scheme: %w[ftp http https]}
 
   # match against a regex
+
+  # todo
+  # not needed; remove?
   validates :my_url, url: {scheme: /myscheme[0-9]/}
 ----
 
@@ -94,7 +102,7 @@ To support Rails 4 and 5.
 
 == Reachability
 
-To add an option to test for the given URL to see if it's reachable, or if the 
+To add an option to test for the given URL to see if it's reachable, or if the
 domain is resolvable.
 
 === Examples
@@ -126,15 +134,16 @@ http://www.faqs.org/rfcs/rfc2606.html
 [source,ruby]
 ----
   # allow reserved authorities to be entered
-  validates :my_url, url: {reserved: true}
+  # default behaviour
+  validates :my_url, url: {allow_reserved: true}
 
   # disallow reserved authorities to be entered
-  validates :my_url, url: {reserved: false}
+  validates :my_url, url: {allow_reserved: false}
 ----
 
 == I18n
 
-To internationalize the error message strings to `de`, `en-UK`, `en-US`, `es`, 
+To internationalize the error message strings to `de`, `en-UK`, `en-US`, `es`,
 `fr`, `ja`, `ko`, `nl`, `pt-BR`, `ru`, `zh-CN`, `zh-TW`, etc.
 
 == (DONE) Travis CI

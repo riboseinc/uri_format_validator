@@ -28,7 +28,7 @@ module ActiveModel
       def initialize(options)
         @schemes =
           case options[:scheme]
-          when true then SCHEMES
+          when :all then SCHEMES
           when nil then %w[http https]
           else options[:scheme]
           end
