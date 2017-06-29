@@ -88,7 +88,7 @@ module ActiveModel
       def validate_authority(option, url)
         raise URI::InvalidURIError if option.is_a?(Regexp) && url.host !~ option
         raise URI::InvalidURIError if option.is_a?(Array)  && !option.include?(url.host)
-        check_reserved_domains(url) if option.is_a?(Hash) && option[:reserved] == false
+        check_reserved_domains(url) if option.is_a?(Hash) && option[:allow_reserved] == false
       end
 
       def accept_relative_urls?
