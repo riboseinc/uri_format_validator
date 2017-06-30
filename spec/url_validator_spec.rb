@@ -85,16 +85,16 @@ RSpec.describe UrlValidator do
   end
 
   context 'options for "scheme"' do
-    context 'when value is true' do
+    context 'when value is :all' do
       it 'check for scheme match' do
         post.url = 'telnet://www.example.com/'
-        Post.validates_url_of :url, scheme: true
+        Post.validates_url_of :url, scheme: :all
         expect(post).to be_valid
       end
 
       it 'reject wrong scheme' do
         post.url = 'undefined://example.com/'
-        Post.validates_url_of :url, scheme: true
+        Post.validates_url_of :url, scheme: :all
         expect(post).to_not be_valid
       end
     end
@@ -278,7 +278,7 @@ RSpec.describe UrlValidator do
     context 'options for "reserved: false"' do
       it 'reject reserved domains' do
         post.url = 'http://example.com'
-        Post.validates_url_of :url, authority: { reserved: false }
+        Post.validates_url_of :url, authority: { allow_reserved: false }
         expect(post).to_not be_valid
       end
     end
