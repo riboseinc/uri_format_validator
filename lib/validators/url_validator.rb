@@ -1,6 +1,8 @@
 require 'active_model'
 require 'uri'
 require 'active_support/core_ext'
+require 'net/http'
+require 'resolv'
 
 module ActiveModel
   module Validations
@@ -33,6 +35,9 @@ module ActiveModel
           else options[:scheme]
           end
 
+        # todo rename options
+        @resolvability = options[:resolvability]
+
         options[:message] ||= I18n.t('errors.messages.invalid_url')
         super(options)
       end
@@ -44,8 +49,11 @@ module ActiveModel
           validate_domain_absense(url)
         else
           validate_domain(value)
-          validate_authority(options[:authority], url)  if options.key?(:authority)
+          validate_authority(options[:authority], url) if options.key?(:authority)
           validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
+
+          # todo
+          self.send(:"validate_#{options[:resolvability]}", url) if options.key?(:resolvability)
         end
 
         %i[path query fragment].each do |prop|
@@ -114,6 +122,39 @@ module ActiveModel
         %r{^#{
           protocol
         }[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$}iux
+      end
+
+
+      # todo
+
+      # host exists and resolves to an ip address
+      def validate_resorvable(url)
+        Resolv.getaddress(url)
+      rescue Resolv::ResolvError => e
+        false
+      rescue
+        nil
+      end
+
+      # url responds something
+      def validate_reachable(url)
+        req = Net::HTTP.new(url.host, url.port)
+        req.request_head(url.path)
+        true
+      rescue SocketError => e
+        false
+      rescue StandardError => e
+        nil
+      end
+
+      # url responds 2xx >= x <= 399
+      def validate_retrievable(url)
+        req = Net::HTTP.new(url.host, url.port)
+
+        # todo - regexp
+        req.use_ssl = true if @schemes.include?("https")
+        res = req.request_head(url.path).code.to_i
+        res >= 200 && res <= 399
       end
     end
 
