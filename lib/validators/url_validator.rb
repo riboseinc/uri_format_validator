@@ -35,9 +35,6 @@ module ActiveModel
           else options[:scheme]
           end
 
-        # todo rename options
-        @resolvability = options[:resolvability]
-
         options[:message] ||= I18n.t('errors.messages.invalid_url')
         super(options)
       end
@@ -52,8 +49,15 @@ module ActiveModel
           validate_authority(options[:authority], url) if options.key?(:authority)
           validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
 
-          # todo
-          self.send(:"validate_#{options[:resolvability]}", url) if options.key?(:resolvability)
+          if options.key?(:resolvability)
+            case options[:resolvability]
+            when :resorvable then validate_resorvable(url.to_s)
+            when :reachable then validate_reachable(url)
+            when :retrievable then validate_retrievable(url)
+            else raise ArgumentError.new("invalid option for 'resolvability', valid options are: \
+                                          :resorvable, :reachable, :retrievable")
+            end
+          end
         end
 
         %i[path query fragment].each do |prop|
@@ -95,8 +99,9 @@ module ActiveModel
 
       def validate_authority(option, url)
         raise URI::InvalidURIError if option.is_a?(Regexp) && url.host !~ option
-        raise URI::InvalidURIError if option.is_a?(Array)  && !option.include?(url.host)
-        check_reserved_domains(url) if option.is_a?(Hash) && option[:allow_reserved] == false
+        raise URI::InvalidURIError if option.is_a?(Array) && !option.include?(url.host)
+        check_reserved_domains(url) if option.is_a?(Hash) &&
+                                       option[:allow_reserved] == false
       end
 
       def accept_relative_urls?
@@ -125,8 +130,7 @@ module ActiveModel
       end
 
 
-      # todo
-
+      # TODO:
       # host exists and resolves to an ip address
       def validate_resorvable(url)
         Resolv.getaddress(url)
@@ -151,9 +155,12 @@ module ActiveModel
       def validate_retrievable(url)
         req = Net::HTTP.new(url.host, url.port)
 
-        # todo - regexp
-        req.use_ssl = true if @schemes.include?("https")
+        if @schemes.is_a?(Array) && @schemes.include?("https")
+          req.use_ssl = true
+        end
+
         res = req.request_head(url.path).code.to_i
+        # TODO: magic numbers, replace
         res >= 200 && res <= 399
       end
     end
