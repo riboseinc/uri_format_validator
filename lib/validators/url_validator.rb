@@ -54,7 +54,7 @@ module ActiveModel
             when :resorvable then validate_resorvable(url.to_s)
             when :reachable then validate_reachable(url)
             when :retrievable then validate_retrievable(url)
-            else raise ArgumentError.new("invalid option for 'resolvability', valid options are: \
+            else raise ArgumentError.new("Invalid option for 'resolvability', valid options are: \
                                           :resorvable, :reachable, :retrievable")
             end
           end
@@ -70,6 +70,8 @@ module ActiveModel
       end
 
       private
+
+      SUCCESSFUL_HTTP_STATUSES = 200..399
 
       def validate_domain(url)
         raise URI::InvalidURIError unless url =~ regexp
@@ -133,35 +135,36 @@ module ActiveModel
       # TODO:
       # host exists and resolves to an ip address
       def validate_resorvable(url)
-        Resolv.getaddress(url)
-      rescue Resolv::ResolvError => e
+        Resolv.getaddress(url) != nil
+      rescue Resolv::ResolvError
+        false
+      rescue Resolv::ResolvTimeout
         false
       rescue
         nil
       end
 
-      # url responds something
+      # url responds with something
       def validate_reachable(url)
         req = Net::HTTP.new(url.host, url.port)
-        req.request_head(url.path)
-        true
+        req.request_head(url.path) != nil
+
+        # TODO: add timeout and error
       rescue SocketError => e
         false
-      rescue StandardError => e
+      rescue
         nil
       end
 
-      # url responds 2xx >= x <= 399
+      # url responds with 2xx >= x <= 399
       def validate_retrievable(url)
         req = Net::HTTP.new(url.host, url.port)
-
-        if @schemes.is_a?(Array) && @schemes.include?("https")
+        if url.scheme == "https" || (url.scheme == nil && @schemes.is_a?(Array) &&
+                                        @schemes.include?("https"))
           req.use_ssl = true
         end
 
-        res = req.request_head(url.path).code.to_i
-        # TODO: magic numbers, replace
-        res >= 200 && res <= 399
+        SUCCESSFUL_HTTP_STATUSES.include?(req.request_head(url.path).code.to_i)
       end
     end
 
