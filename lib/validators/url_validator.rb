@@ -72,6 +72,7 @@ module ActiveModel
       private
 
       SUCCESSFUL_HTTP_STATUSES = 200..399
+      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https]
 
       def validate_domain(url)
         raise URI::InvalidURIError unless url =~ regexp
@@ -146,6 +147,7 @@ module ActiveModel
 
       # url responds with something
       def validate_reachable(url)
+        scheme_supports_resolvability!(url)
         req = Net::HTTP.new(url.host, url.port)
         req.request_head(url.path) != nil
 
@@ -158,6 +160,7 @@ module ActiveModel
 
       # url responds with 2xx >= x <= 399
       def validate_retrievable(url)
+        scheme_supports_resolvability!(url)
         req = Net::HTTP.new(url.host, url.port)
         if url.scheme == "https" || (url.scheme == nil && @schemes.is_a?(Array) &&
                                         @schemes.include?("https"))
@@ -165,6 +168,16 @@ module ActiveModel
         end
 
         SUCCESSFUL_HTTP_STATUSES.include?(req.request_head(url.path).code.to_i)
+      end
+
+      def scheme_supports_resolvability!(url)
+        sch = url.schema
+        if RESOLVABILITY_SUPPORTED_SCHEMES.include?(sch)
+          true
+        else
+          raise ArgumentExcpeption.new("The scheme #{sch} not supported for resolvability validation. \
+                                        Supported schemes are #{REACHABILITY_SUPPORTED_SCHEMES}")
+        end
       end
     end
 
