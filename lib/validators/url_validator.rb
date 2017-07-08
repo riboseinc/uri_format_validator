@@ -147,27 +147,22 @@ module ActiveModel
 
       # url responds with something
       def validate_reachable(url)
-        scheme_supports_resolvability!(url)
-        req = Net::HTTP.new(url.host, url.port)
-        req.request_head(url.path) != nil
-
-        # TODO: add timeout and error
-      rescue SocketError => e
-        false
-      rescue
-        nil
+        res = generic_validate_retrievable(url)
+        if res
+          res.code.to_i != 404
+        else
+          res
+        end
       end
 
       # url responds with 2xx >= x <= 399
       def validate_retrievable(url)
-        scheme_supports_resolvability!(url)
-        req = Net::HTTP.new(url.host, url.port)
-        if url.scheme == "https" || (url.scheme == nil && @schemes.is_a?(Array) &&
-                                        @schemes.include?("https"))
-          req.use_ssl = true
+        res = generic_validate_retrievable(url)
+        if res
+          SUCCESSFUL_HTTP_STATUSES.include?(res.code.to_i)
+        else
+          res
         end
-
-        SUCCESSFUL_HTTP_STATUSES.include?(req.request_head(url.path).code.to_i)
       end
 
       def scheme_supports_resolvability!(url)
@@ -176,8 +171,25 @@ module ActiveModel
           true
         else
           raise ArgumentExcpeption.new("The scheme #{sch} not supported for resolvability validation. \
-                                        Supported schemes are #{REACHABILITY_SUPPORTED_SCHEMES}")
+                                        Supported schemes: #{REACHABILITY_SUPPORTED_SCHEMES}")
         end
+      end
+     
+      def use_https?(url)
+        url.scheme == "https" || 
+          (url.scheme == nil && @schemes.is_a?(Array) && @schemes.include?("https"))
+      end
+
+      def generic_validate_retrievable(url)
+        scheme_supports_resolvability!(url)
+        req = Net::HTTP.new(url.host, url.port)
+        req.use_ssl = use_https?(url)
+        path = url.path.present? ? url.path : '/'
+        req.request_head(path)
+      rescue Errno::ENOENT
+        false 
+      rescue
+        nil
       end
     end
 
