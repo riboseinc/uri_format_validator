@@ -1,17 +1,28 @@
 sudo: false
 language: ruby
 
-rvm:
-  - 2.2.2
-
 before_install:
   - gem install bundler -v 1.14.6
 
 script:
   - bundle exec rspec
 
+rvm:
+  - "2.4"
+  - "2.3"
+  - "2.2.2"
+  - "ruby-head"
+  - "rbx-3"
+  - "jruby"
+  - "jruby-head"
+
 gemfile:
   - gemfiles/rails-4.1.gemfile
   - gemfiles/rails-4.2.gemfile
   - gemfiles/rails-5.0.gemfile
   - gemfiles/rails-5.1.gemfile
+
+matrix:
+  allow_failures:
+    - rvm: "ruby-head"
+    - rvm: "jruby-head"
