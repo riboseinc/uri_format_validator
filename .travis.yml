@@ -23,6 +23,9 @@ gemfile:
 matrix:
   include:
     - rvm: "2.4"
+      gemfile: gemfiles/rails-head.gemfile
+
+    - rvm: "2.4"
       gemfile: gemfiles/rails-5.0.gemfile
 
     - rvm: "2.4"
@@ -38,3 +41,4 @@ matrix:
   allow_failures:
     - rvm: "ruby-head"
     - rvm: "jruby-head"
+    - gemfile: gemfiles/rails-head.gemfile
