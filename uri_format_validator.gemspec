@@ -2,11 +2,11 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "url_validator/version"
+require "uri_format_validator/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "uri_format_validator"
-  spec.version       = UrlValidator::VERSION
+  spec.version       = UriFormatValidator::VERSION
   spec.authors       = ["Ribose Inc."]
   spec.email         = ["open.source@ribose.com"]
 

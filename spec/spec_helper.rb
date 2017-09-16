@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "url_validator"
+require "uri_format_validator"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

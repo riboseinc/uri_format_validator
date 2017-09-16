@@ -6,7 +6,7 @@ class Post
   attr_accessor :url
 end
 
-RSpec.describe UrlValidator do
+RSpec.describe UriFormatValidator do
   let(:post) { Post.new }
   after do
     Post.clear_validators!
