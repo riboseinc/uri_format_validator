@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Library for validating urls in Rails"
   spec.description   = "Library for validating urls in Rails"
-  spec.homepage      = "https://github.com/riboseinc/url_validator"
+  spec.homepage      = "https://github.com/riboseinc/uri_format_validator"
   spec.license       = "MIT"
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
