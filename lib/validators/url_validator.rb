@@ -132,7 +132,6 @@ module ActiveModel
         }[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$}iux
       end
 
-
       # TODO:
       # host exists and resolves to an ip address
       def validate_resorvable(url)
@@ -174,9 +173,9 @@ module ActiveModel
                                         Supported schemes: #{REACHABILITY_SUPPORTED_SCHEMES}")
         end
       end
-     
+
       def use_https?(url)
-        url.scheme == "https" || 
+        url.scheme == "https" ||
           (url.scheme == nil && @schemes.is_a?(Array) && @schemes.include?("https"))
       end
 
@@ -187,7 +186,7 @@ module ActiveModel
         path = url.path.present? ? url.path : "/"
         req.request_head(path)
       rescue Errno::ENOENT
-        false 
+        false
       rescue
         nil
       end

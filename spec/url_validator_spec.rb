@@ -7,7 +7,6 @@ class Post
 end
 
 RSpec.describe UrlValidator do
-
   let(:post) { Post.new }
   after do
     Post.clear_validators!
@@ -283,5 +282,4 @@ RSpec.describe UrlValidator do
       end
     end
   end
-
 end
