@@ -9,7 +9,7 @@ module ActiveModel
     #
     # TODO: documentation
     #
-    class UrlValidator < ::ActiveModel::EachValidator
+    class UriFormatValidator < ::ActiveModel::EachValidator
       SCHEMES = %w[
         aaa aaas about acap acct cap cid coap coaps crid data dav dict dns
         example file ftp geo go gopher h323 http https iax icap im imap info ipp
@@ -199,7 +199,7 @@ module ActiveModel
       #     validates_url_of :permalink
       #   end
       def validates_url_of(*attr_names)
-        validates_with UrlValidator, _merge_attributes(attr_names)
+        validates_with UriFormatValidator, _merge_attributes(attr_names)
       end
     end
   end
