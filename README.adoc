@@ -1,6 +1,6 @@
 = UriFormatValidator
 
-https://travis-ci.org/riboseinc/url_validator[image:https://img.shields.io/travis/riboseinc/url_validator/master.svg[Build
+https://travis-ci.org/riboseinc/uri_format_validator[image:https://img.shields.io/travis/riboseinc/uri_format_validator/master.svg[Build
 Status]]
 
 Validate URL formats in ActiveModels.
