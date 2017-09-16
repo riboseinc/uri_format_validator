@@ -53,12 +53,12 @@ RSpec.describe UrlValidator do
       "http://www.google.com",
       "http://goo-gle.com",
       "http://1234.com",
-      "http://google.uk"
+      "http://google.uk",
     ]
     invalid_urls = [
       "google.com",
       "http://google",
-      "http://google.looooongltd"
+      "http://google.looooongltd",
     ]
 
     valid_urls.each do |url|
