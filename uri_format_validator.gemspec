@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "url_validator/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "url_validator"
+  spec.name          = "uri_format_validator"
   spec.version       = UrlValidator::VERSION
   spec.authors       = ["Ribose Inc."]
   spec.email         = ["open.source@ribose.com"]
