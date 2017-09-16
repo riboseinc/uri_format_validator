@@ -1,5 +1,6 @@
 = UriFormatValidator
 
+https://rubygems.org/gems/uri_format_validator[image:https://img.shields.io/gem/v/uri_format_validator.svg[Gem Version]]
 https://travis-ci.org/riboseinc/uri_format_validator[image:https://img.shields.io/travis/riboseinc/uri_format_validator/master.svg[Build
 Status]]
 
