@@ -18,7 +18,7 @@
 
 == URL
 
-We'd like url_validator to support
+We'd like uri_format_validator to support
 https://tools.ietf.org/html/rfc3986#appendix-B[RFC 3986],
 with the option to impose a constraint on the URI scheme, e.g. to only `http` &
 `https`.

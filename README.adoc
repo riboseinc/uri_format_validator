@@ -1,4 +1,4 @@
-= UrlValidator
+= UriFormatValidator
 
 https://travis-ci.org/riboseinc/url_validator[image:https://img.shields.io/travis/riboseinc/url_validator/master.svg[Build
 Status]]
@@ -11,7 +11,7 @@ Add this line to your application's Gemfile:
 
 [source,ruby]
 ----
-gem 'url_validator'
+gem 'uri_format_validator'
 ----
 
 And then execute:
@@ -23,7 +23,7 @@ $ bundle
 Or install it yourself as:
 
 ....
-$ gem install url_validator
+$ gem install uri_format_validator
 ....
 
 == Usage
