@@ -1,8 +1,8 @@
-require 'active_model'
-require 'uri'
-require 'active_support/core_ext'
-require 'net/http'
-require 'resolv'
+require "active_model"
+require "uri"
+require "active_support/core_ext"
+require "net/http"
+require "resolv"
 
 module ActiveModel
   module Validations
@@ -35,7 +35,7 @@ module ActiveModel
           else options[:scheme]
           end
 
-        options[:message] ||= I18n.t('errors.messages.invalid_url')
+        options[:message] ||= I18n.t("errors.messages.invalid_url")
         super(options)
       end
 
@@ -87,8 +87,8 @@ module ActiveModel
       end
 
       def validate_path(option, path)
-        raise URI::InvalidURIError if option == true  && path == '/' || path == ''
-        raise URI::InvalidURIError if option == false && path != '/' && path != ''
+        raise URI::InvalidURIError if option == true  && path == "/" || path == ""
+        raise URI::InvalidURIError if option == false && path != "/" && path != ""
         raise URI::InvalidURIError if option.is_a?(Regexp) && path !~ option
       end
 
@@ -184,7 +184,7 @@ module ActiveModel
         scheme_supports_resolvability!(url)
         req = Net::HTTP.new(url.host, url.port)
         req.use_ssl = use_https?(url)
-        path = url.path.present? ? url.path : '/'
+        path = url.path.present? ? url.path : "/"
         req.request_head(path)
       rescue Errno::ENOENT
         false 
