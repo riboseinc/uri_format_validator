@@ -1,6 +1,9 @@
 # (c) Copyright 2017 Ribose Inc.
 #
 
+require "simplecov"
+SimpleCov.start
+
 require "bundler"
 Bundler.require :default, :development
 # require "uri_format_validator"
