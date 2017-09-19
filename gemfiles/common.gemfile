@@ -3,3 +3,4 @@ source 'https://rubygems.org'
 gemspec path: '..'
 
 gem 'rubocop', require: false
+gem 'simplecov', require: false, group: :test
