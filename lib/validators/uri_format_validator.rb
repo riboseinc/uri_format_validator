@@ -72,7 +72,7 @@ module ActiveModel
       private
 
       SUCCESSFUL_HTTP_STATUSES = 200..399
-      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https]
+      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
 
       def validate_domain(url)
         raise URI::InvalidURIError unless url =~ regexp
