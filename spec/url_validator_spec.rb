@@ -1,16 +1,7 @@
 require "spec_helper"
 
-class Post
-  include ActiveModel::Validations
-  include ActiveModel::Validations::Callbacks
-  attr_accessor :url
-end
-
 RSpec.describe UriFormatValidator do
   let(:post) { Post.new }
-  after do
-    Post.clear_validators!
-  end
 
   context "when url field is empty" do
     it "fails with default message" do
