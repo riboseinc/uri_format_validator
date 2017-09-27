@@ -75,8 +75,10 @@ module UriFormatValidator
             when :resorvable then validate_resorvable(url.to_s)
             when :reachable then validate_reachable(url)
             when :retrievable then validate_retrievable(url)
-            else raise ArgumentError.new("Invalid option for 'resolvability', valid options are: \
-                                          :resorvable, :reachable, :retrievable")
+            else
+              msg = "Invalid option for 'resolvability', valid options are: \
+                    :resorvable, :reachable, :retrievable"
+              raise ArgumentError.new(msg)
             end
           end
         end
@@ -193,8 +195,9 @@ module UriFormatValidator
         if RESOLVABILITY_SUPPORTED_SCHEMES.include?(sch)
           true
         else
-          raise ArgumentExcpeption.new("The scheme #{sch} not supported for resolvability validation. \
-                                        Supported schemes: #{REACHABILITY_SUPPORTED_SCHEMES}")
+          msg = "The scheme #{sch} not supported for resolvability validation. \
+                Supported schemes: #{REACHABILITY_SUPPORTED_SCHEMES}"
+          raise ArgumentExcpeption.new(msg)
         end
       end
 
