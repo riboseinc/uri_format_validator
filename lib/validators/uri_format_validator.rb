@@ -199,7 +199,7 @@ module ActiveModel
 
       def use_https?(url)
         url.scheme == "https" ||
-          (url.scheme == nil && @schemes.is_a?(Array) && @schemes.include?("https"))
+          (url.scheme.nil? && @schemes.try(:include?, "https"))
       end
 
       def generic_validate_retrievable(url)
