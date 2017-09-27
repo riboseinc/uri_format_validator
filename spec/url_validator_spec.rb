@@ -279,4 +279,13 @@ RSpec.describe UriFormatValidator do
       end
     end
   end
+
+  it "provides alternative, old-fashioned way to set validations" do
+    Post.validates_url_of :url
+
+    post.url = "http://google"
+    expect(post).not_to be_valid
+    post.url = "http://google.com"
+    expect(post).to be_valid
+  end
 end
