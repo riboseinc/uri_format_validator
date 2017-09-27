@@ -43,12 +43,23 @@ module ActiveModel
       end
 
       def validate_each(record, attribute, value)
-        url = URI(value.to_s)
+        do_checks(value.to_s)
+        true
+      rescue URI::InvalidURIError
+        record.errors[attribute] << options[:message]
+      end
 
+      private
+
+      SUCCESSFUL_HTTP_STATUSES = 200..399
+      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
+
+      def do_checks(url_string)
+        url = URI(url_string.to_s)
         if accept_relative_urls?
           validate_domain_absense(url)
         else
-          validate_domain(value)
+          validate_domain(url_string)
           validate_authority(options[:authority], url) if options.key?(:authority)
           validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
 
@@ -66,16 +77,7 @@ module ActiveModel
         %i[path query fragment].each do |prop|
           send(:"validate_#{prop}", options[prop], url.send(prop)) if options.key?(prop)
         end
-
-        true
-      rescue URI::InvalidURIError
-        record.errors[attribute] << options[:message]
       end
-
-      private
-
-      SUCCESSFUL_HTTP_STATUSES = 200..399
-      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
 
       def validate_domain(url)
         raise URI::InvalidURIError unless url =~ regexp
