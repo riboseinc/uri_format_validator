@@ -36,6 +36,13 @@ Add the following to your model:
 validates :my_url_attribute, uri_format: true
 ----
 
+Also, an old-fashioned validation helper is provided:
+
+[source,ruby]
+----
+validates_url_format_of :my_url_attribute
+----
+
 == Error messages
 
 You can set the error message as an additional parameter
