@@ -155,9 +155,7 @@ module ActiveModel
       # host exists and resolves to an ip address
       def validate_resorvable(url)
         Resolv.getaddress(url) != nil
-      rescue Resolv::ResolvError
-        false
-      rescue Resolv::ResolvTimeout
+      rescue Resolv::ResolvError, Resolv::ResolvTimeout
         false
       rescue
         nil
