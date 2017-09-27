@@ -1,3 +1,6 @@
+# (c) Copyright 2017 Ribose Inc.
+#
+
 require "spec_helper"
 
 RSpec.describe UriFormatValidator do

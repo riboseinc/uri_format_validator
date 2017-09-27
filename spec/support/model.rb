@@ -1,3 +1,6 @@
+# (c) Copyright 2017 Ribose Inc.
+#
+
 class Post
   include ActiveModel::Validations
   include ActiveModel::Validations::Callbacks
