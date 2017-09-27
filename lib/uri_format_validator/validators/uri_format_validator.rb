@@ -43,14 +43,19 @@ module UriFormatValidator
       end
 
       def validate_each(record, attribute, value)
-        do_checks(value.to_s)
-        true
+        success = catch(STOP_VALIDATION) do
+          do_checks(value.to_s)
+          true
+        end
+        success || set_failure_message(record, attribute)
       rescue URI::InvalidURIError
+        # The rescue clause is still required because URI() may raise exception.
         set_failure_message(record, attribute)
       end
 
       private
 
+      STOP_VALIDATION = Object.new.freeze
       SUCCESSFUL_HTTP_STATUSES = 200..399
       RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
 
@@ -84,7 +89,7 @@ module UriFormatValidator
       end
 
       def fail_if(condition)
-        raise URI::InvalidURIError if condition
+        throw STOP_VALIDATION if condition
       end
 
       def fail_unless(condition)
