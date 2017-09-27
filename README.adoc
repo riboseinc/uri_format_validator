@@ -33,7 +33,7 @@ Add the following to your model:
 
 [source,ruby]
 ----
-validates :my_url_attribute, url: true
+validates :my_url_attribute, uri_format: true
 ----
 
 == Error messages
@@ -42,7 +42,7 @@ You can set the error message as an additional parameter
 
 [source,ruby]
 ----
-validates :my_url_attribute, url: true, message: 'is not a valid URL'
+validates :my_url_attribute, uri_format: true, message: 'is not a valid URL'
 ----
 
 or you can use locales:
