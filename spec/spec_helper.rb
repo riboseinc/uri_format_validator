@@ -1,3 +1,6 @@
+# (c) Copyright 2017 Ribose Inc.
+#
+
 require "bundler/setup"
 require "uri_format_validator"
 

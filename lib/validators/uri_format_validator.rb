@@ -1,3 +1,6 @@
+# (c) Copyright 2017 Ribose Inc.
+#
+
 require "active_model"
 require "uri"
 require "active_support/core_ext"
