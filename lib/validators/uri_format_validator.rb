@@ -46,7 +46,7 @@ module ActiveModel
         do_checks(value.to_s)
         true
       rescue URI::InvalidURIError
-        record.errors[attribute] << options[:message]
+        set_failure_message(record, attribute)
       end
 
       private
@@ -77,6 +77,10 @@ module ActiveModel
         %i[path query fragment].each do |prop|
           send(:"validate_#{prop}", options[prop], url.send(prop)) if options.key?(prop)
         end
+      end
+
+      def set_failure_message(record, attribute)
+        record.errors[attribute] << options[:message]
       end
 
       def fail_if(condition)
