@@ -48,9 +48,6 @@ module UriFormatValidator
           true
         end
         success || set_failure_message(record, attribute)
-      rescue URI::InvalidURIError
-        # The rescue clause is still required because URI() may raise exception.
-        set_failure_message(record, attribute)
       end
 
       private
@@ -60,7 +57,12 @@ module UriFormatValidator
       RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
 
       def do_checks(url_string)
-        url = URI(url_string.to_s)
+        begin
+          url = URI(url_string.to_s)
+        rescue URI::InvalidURIError
+          fail_if true
+        end
+
         if accept_relative_urls?
           validate_domain_absense(url)
         else
