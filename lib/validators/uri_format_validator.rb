@@ -43,12 +43,30 @@ module ActiveModel
       end
 
       def validate_each(record, attribute, value)
-        url = URI(value.to_s)
+        success = catch(STOP_VALIDATION) do
+          do_checks(value.to_s)
+          true
+        end
+        success || set_failure_message(record, attribute)
+      end
+
+      private
+
+      STOP_VALIDATION = Object.new.freeze
+      SUCCESSFUL_HTTP_STATUSES = 200..399
+      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
+
+      def do_checks(url_string)
+        begin
+          url = URI(url_string.to_s)
+        rescue URI::InvalidURIError
+          fail_if true
+        end
 
         if accept_relative_urls?
           validate_domain_absense(url)
         else
-          validate_domain(value)
+          validate_domain(url_string)
           validate_authority(options[:authority], url) if options.key?(:authority)
           validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
 
@@ -57,8 +75,10 @@ module ActiveModel
             when :resorvable then validate_resorvable(url.to_s)
             when :reachable then validate_reachable(url)
             when :retrievable then validate_retrievable(url)
-            else raise ArgumentError.new("Invalid option for 'resolvability', valid options are: \
-                                          :resorvable, :reachable, :retrievable")
+            else
+              msg = "Invalid option for 'resolvability', valid options are: \
+                    :resorvable, :reachable, :retrievable"
+              raise ArgumentError.new(msg)
             end
           end
         end
@@ -66,46 +86,49 @@ module ActiveModel
         %i[path query fragment].each do |prop|
           send(:"validate_#{prop}", options[prop], url.send(prop)) if options.key?(prop)
         end
+      end
 
-        true
-      rescue URI::InvalidURIError
+      def set_failure_message(record, attribute)
         record.errors[attribute] << options[:message]
       end
 
-      private
+      def fail_if(condition)
+        throw STOP_VALIDATION if condition
+      end
 
-      SUCCESSFUL_HTTP_STATUSES = 200..399
-      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
+      def fail_unless(condition)
+        fail_if !condition
+      end
 
       def validate_domain(url)
-        raise URI::InvalidURIError unless url =~ regexp
+        fail_unless url =~ regexp
       end
 
       def validate_scheme(_option, scheme)
         if @schemes.is_a?(Regexp)
-          raise URI::InvalidURIError if scheme !~ @schemes
+          fail_if scheme !~ @schemes
         else
-          raise URI::InvalidURIError unless @schemes.include?(scheme)
+          fail_unless @schemes.include?(scheme)
         end
       end
 
       def validate_path(option, path)
-        raise URI::InvalidURIError if option == true  && path == "/" || path == ""
-        raise URI::InvalidURIError if option == false && path != "/" && path != ""
-        raise URI::InvalidURIError if option.is_a?(Regexp) && path !~ option
+        fail_if option == true  && path == "/" || path == ""
+        fail_if option == false && path != "/" && path != ""
+        fail_if option.is_a?(Regexp) && path !~ option
       end
 
       def validate_query(option, query)
-        raise URI::InvalidURIError unless query.present? == option
+        fail_unless query.present? == option
       end
 
       def validate_fragment(option, fragment)
-        raise URI::InvalidURIError unless fragment.present? == option
+        fail_unless fragment.present? == option
       end
 
       def validate_authority(option, url)
-        raise URI::InvalidURIError if option.is_a?(Regexp) && url.host !~ option
-        raise URI::InvalidURIError if option.is_a?(Array) && !option.include?(url.host)
+        fail_if option.is_a?(Regexp) && url.host !~ option
+        fail_if option.is_a?(Array) && !option.include?(url.host)
         check_reserved_domains(url) if option.is_a?(Hash) &&
                                        option[:allow_reserved] == false
       end
@@ -115,11 +138,11 @@ module ActiveModel
       end
 
       def validate_domain_absense(url)
-        raise URI::InvalidURIError if url.host.present?
+        fail_if url.host.present?
       end
 
       def check_reserved_domains(url)
-        raise URI::InvalidURIError if url.host =~ RESERVED_DOMAINS
+        fail_if url.host =~ RESERVED_DOMAINS
       end
 
       def regexp
@@ -139,9 +162,7 @@ module ActiveModel
       # host exists and resolves to an ip address
       def validate_resorvable(url)
         Resolv.getaddress(url) != nil
-      rescue Resolv::ResolvError
-        false
-      rescue Resolv::ResolvTimeout
+      rescue Resolv::ResolvError, Resolv::ResolvTimeout
         false
       rescue
         nil
@@ -172,14 +193,15 @@ module ActiveModel
         if RESOLVABILITY_SUPPORTED_SCHEMES.include?(sch)
           true
         else
-          raise ArgumentExcpeption.new("The scheme #{sch} not supported for resolvability validation. \
-                                        Supported schemes: #{REACHABILITY_SUPPORTED_SCHEMES}")
+          msg = "The scheme #{sch} not supported for resolvability validation. \
+                Supported schemes: #{REACHABILITY_SUPPORTED_SCHEMES}"
+          raise ArgumentExcpeption.new(msg)
         end
       end
 
       def use_https?(url)
         url.scheme == "https" ||
-          (url.scheme == nil && @schemes.is_a?(Array) && @schemes.include?("https"))
+          (url.scheme.nil? && @schemes.try(:include?, "https"))
       end
 
       def generic_validate_retrievable(url)
