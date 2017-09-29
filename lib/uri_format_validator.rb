@@ -3,8 +3,8 @@
 
 require "uri_format_validator/version"
 require "uri_format_validator/localization"
-require "validators/uri_format_validator"
-require "validators/helper_methods"
+require "uri_format_validator/validators/uri_format_validator"
+require "uri_format_validator/validators/helper_methods"
 
 # This is a placeholder...
 module UriFormatValidator

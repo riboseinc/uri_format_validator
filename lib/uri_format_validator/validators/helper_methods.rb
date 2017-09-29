@@ -3,8 +3,8 @@
 
 require "active_model"
 
-module ActiveModel
-  module Validations
+module UriFormatValidator
+  module Validators
     module HelperMethods
       # Encapsulates the pattern of wanting to validate an URL.
       #
