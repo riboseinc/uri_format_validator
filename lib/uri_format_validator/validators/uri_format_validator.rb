@@ -129,8 +129,10 @@ module UriFormatValidator
       def validate_authority(option, url)
         fail_if option.is_a?(Regexp) && url.host !~ option
         fail_if option.is_a?(Array) && !option.include?(url.host)
-        check_reserved_domains(url) if option.is_a?(Hash) &&
-                                       option[:allow_reserved] == false
+
+        if option.is_a?(Hash) && option[:allow_reserved] == false
+          check_reserved_domains(url)
+        end
       end
 
       def accept_relative_urls?
