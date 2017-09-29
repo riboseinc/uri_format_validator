@@ -84,7 +84,8 @@ module UriFormatValidator
         end
 
         %i[path query fragment].each do |prop|
-          send(:"validate_#{prop}", options[prop], url.send(prop)) if options.key?(prop)
+          next unless options.key?(prop)
+          send(:"validate_#{prop}", options[prop], url.send(prop))
         end
       end
 
