@@ -49,6 +49,11 @@ module UriFormatValidator
         record.errors[attribute] << options[:message]
       end
 
+      private
+
+      SUCCESSFUL_HTTP_STATUSES = 200..399
+      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
+
       def do_checks(url_string)
         url = URI(url_string.to_s)
         if accept_relative_urls?
@@ -73,11 +78,6 @@ module UriFormatValidator
           send(:"validate_#{prop}", options[prop], url.send(prop)) if options.key?(prop)
         end
       end
-
-      private
-
-      SUCCESSFUL_HTTP_STATUSES = 200..399
-      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
 
       def validate_domain(url)
         raise URI::InvalidURIError unless url =~ regexp
