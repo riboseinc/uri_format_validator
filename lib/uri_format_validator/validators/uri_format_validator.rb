@@ -161,7 +161,7 @@ module UriFormatValidator
       # TODO:
       # host exists and resolves to an ip address
       def validate_resorvable(url)
-        Resolv.getaddress(url) != nil
+        !Resolv.getaddress(url).nil?
       rescue Resolv::ResolvError, Resolv::ResolvTimeout
         false
       rescue
