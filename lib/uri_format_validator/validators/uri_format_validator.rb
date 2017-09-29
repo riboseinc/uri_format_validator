@@ -56,25 +56,25 @@ module UriFormatValidator
       SUCCESSFUL_HTTP_STATUSES = 200..399
       RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
 
-      def do_checks(url_string)
+      def do_checks(uri_string)
         begin
-          url = URI(url_string.to_s)
+          uri = URI(uri_string.to_s)
         rescue URI::InvalidURIError
           fail_if true
         end
 
-        if accept_relative_urls?
-          validate_domain_absense(url)
+        if accept_relative_uris?
+          validate_domain_absense(uri)
         else
-          validate_domain(url_string)
-          validate_authority(options[:authority], url) if options.key?(:authority)
-          validate_scheme(options[:scheme], url.scheme) if options.key?(:scheme)
+          validate_domain(uri_string)
+          validate_authority(options[:authority], uri) if options.key?(:authority)
+          validate_scheme(options[:scheme], uri.scheme) if options.key?(:scheme)
 
           if options.key?(:resolvability)
             case options[:resolvability]
-            when :resorvable then validate_resorvable(url.to_s)
-            when :reachable then validate_reachable(url)
-            when :retrievable then validate_retrievable(url)
+            when :resorvable then validate_resorvable(uri.to_s)
+            when :reachable then validate_reachable(uri)
+            when :retrievable then validate_retrievable(uri)
             else
               msg = "Invalid option for 'resolvability', valid options are: \
                     :resorvable, :reachable, :retrievable"
@@ -85,7 +85,7 @@ module UriFormatValidator
 
         %i[path query fragment].each do |prop|
           next unless options.key?(prop)
-          send(:"validate_#{prop}", options[prop], url.send(prop))
+          send(:"validate_#{prop}", options[prop], uri.send(prop))
         end
       end
 
@@ -101,8 +101,8 @@ module UriFormatValidator
         fail_if !condition
       end
 
-      def validate_domain(url)
-        fail_unless url =~ regexp
+      def validate_domain(uri)
+        fail_unless uri =~ regexp
       end
 
       def validate_scheme(_option, scheme)
@@ -127,25 +127,25 @@ module UriFormatValidator
         fail_unless fragment.present? == option
       end
 
-      def validate_authority(option, url)
-        fail_if option.is_a?(Regexp) && url.host !~ option
-        fail_if option.is_a?(Array) && !option.include?(url.host)
+      def validate_authority(option, uri)
+        fail_if option.is_a?(Regexp) && uri.host !~ option
+        fail_if option.is_a?(Array) && !option.include?(uri.host)
 
         if option.is_a?(Hash) && option[:allow_reserved] == false
-          check_reserved_domains(url)
+          check_reserved_domains(uri)
         end
       end
 
-      def accept_relative_urls?
+      def accept_relative_uris?
         options.key?(:authority) && options[:authority] == false
       end
 
-      def validate_domain_absense(url)
-        fail_if url.host.present?
+      def validate_domain_absense(uri)
+        fail_if uri.host.present?
       end
 
-      def check_reserved_domains(url)
-        fail_if url.host =~ RESERVED_DOMAINS
+      def check_reserved_domains(uri)
+        fail_if uri.host =~ RESERVED_DOMAINS
       end
 
       def regexp
@@ -163,17 +163,17 @@ module UriFormatValidator
 
       # TODO:
       # host exists and resolves to an ip address
-      def validate_resorvable(url)
-        !Resolv.getaddress(url).nil?
+      def validate_resorvable(uri)
+        !Resolv.getaddress(uri).nil?
       rescue Resolv::ResolvError, Resolv::ResolvTimeout
         false
       rescue
         nil
       end
 
-      # url responds with something
-      def validate_reachable(url)
-        res = generic_validate_retrievable(url)
+      # uri responds with something
+      def validate_reachable(uri)
+        res = generic_validate_retrievable(uri)
         if res
           res.code.to_i != 404
         else
@@ -181,9 +181,9 @@ module UriFormatValidator
         end
       end
 
-      # url responds with 2xx >= x <= 399
-      def validate_retrievable(url)
-        res = generic_validate_retrievable(url)
+      # uri responds with 2xx >= x <= 399
+      def validate_retrievable(uri)
+        res = generic_validate_retrievable(uri)
         if res
           SUCCESSFUL_HTTP_STATUSES.include?(res.code.to_i)
         else
@@ -191,8 +191,8 @@ module UriFormatValidator
         end
       end
 
-      def scheme_supports_resolvability!(url)
-        sch = url.schema
+      def scheme_supports_resolvability!(uri)
+        sch = uri.schema
         if RESOLVABILITY_SUPPORTED_SCHEMES.include?(sch)
           true
         else
@@ -202,16 +202,16 @@ module UriFormatValidator
         end
       end
 
-      def use_https?(url)
-        url.scheme == "https" ||
-          (url.scheme.nil? && @schemes.try(:include?, "https"))
+      def use_https?(uri)
+        uri.scheme == "https" ||
+          (uri.scheme.nil? && @schemes.try(:include?, "https"))
       end
 
-      def generic_validate_retrievable(url)
-        scheme_supports_resolvability!(url)
-        req = Net::HTTP.new(url.host, url.port)
-        req.use_ssl = use_https?(url)
-        path = url.path.present? ? url.path : "/"
+      def generic_validate_retrievable(uri)
+        scheme_supports_resolvability!(uri)
+        req = Net::HTTP.new(uri.host, uri.port)
+        req.use_ssl = use_https?(uri)
+        path = uri.path.present? ? uri.path : "/"
         req.request_head(path)
       rescue Errno::ENOENT
         false
