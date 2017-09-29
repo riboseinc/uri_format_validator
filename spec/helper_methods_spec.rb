@@ -3,7 +3,7 @@
 
 require "spec_helper"
 
-describe ActiveModel::Validations::HelperMethods do
+describe UriFormatValidator::Validators::HelperMethods do
   let(:post) { Post.new }
 
   it "provides alternative, old-fashioned way to set validations" do

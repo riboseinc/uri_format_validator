@@ -7,8 +7,8 @@ require "active_support/core_ext"
 require "net/http"
 require "resolv"
 
-module ActiveModel
-  module Validations
+module UriFormatValidator
+  module Validators
     #
     # TODO: documentation
     #
