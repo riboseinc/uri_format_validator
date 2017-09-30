@@ -58,7 +58,7 @@ module UriFormatValidator
 
       def do_checks(uri_string)
         begin
-          uri = URI(uri_string.to_s)
+          uri = URI(uri_string)
         rescue URI::InvalidURIError
           fail_if true
         end
