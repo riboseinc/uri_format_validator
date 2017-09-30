@@ -69,18 +69,7 @@ module UriFormatValidator
           validate_domain(uri_string)
           validate_authority(options[:authority], uri) if options.key?(:authority)
           validate_scheme(options[:scheme], uri.scheme) if options.key?(:scheme)
-
-          if options.key?(:resolvability)
-            case options[:resolvability]
-            when :resorvable then validate_resorvable(uri.to_s)
-            when :reachable then validate_reachable(uri)
-            when :retrievable then validate_retrievable(uri)
-            else
-              msg = "Invalid option for 'resolvability', valid options are: \
-                    :resorvable, :reachable, :retrievable"
-              raise ArgumentError.new(msg)
-            end
-          end
+          validate_resolvability(options[:resolvability], uri) if options.key?(:resolvability)
         end
 
         %i[path query fragment].each do |prop|
@@ -133,6 +122,18 @@ module UriFormatValidator
 
         if option.is_a?(Hash) && option[:allow_reserved] == false
           check_reserved_domains(uri)
+        end
+      end
+
+      def validate_resolvability(option, uri)
+        case option
+        when :resorvable then validate_resorvable(uri.to_s)
+        when :reachable then validate_reachable(uri)
+        when :retrievable then validate_retrievable(uri)
+        else
+          msg = "Invalid option for 'resolvability', valid options are: \
+                :resorvable, :reachable, :retrievable"
+          raise ArgumentError.new(msg)
         end
       end
 
