@@ -59,7 +59,7 @@ or you can use locales:
 en:
   errors:
     messages:
-      invalid_url: 'is not a valid URL'
+      invalid_uri: 'is not a valid URL'
 ----
 
 == Development
