@@ -65,13 +65,13 @@ module UriFormatValidator
         else
           validate_domain(uri_string)
           validate_authority(options[:authority], uri) if options.key?(:authority)
-          validate_scheme(options[:scheme], uri.scheme) if options.key?(:scheme)
+          validate_scheme(options[:scheme], uri) if options.key?(:scheme)
           validate_resolvability(options[:resolvability], uri) if options.key?(:resolvability)
         end
 
         %i[path query fragment].each do |prop|
           next unless options.key?(prop)
-          send(:"validate_#{prop}", options[prop], uri.send(prop))
+          send(:"validate_#{prop}", options[prop], uri)
         end
       end
 
@@ -100,7 +100,8 @@ module UriFormatValidator
         fail_unless uri =~ regexp
       end
 
-      def validate_scheme(_option, scheme)
+      def validate_scheme(_option, uri)
+        scheme = uri.scheme
         if @schemes.is_a?(Regexp)
           fail_if scheme !~ @schemes
         else
@@ -108,18 +109,19 @@ module UriFormatValidator
         end
       end
 
-      def validate_path(option, path)
+      def validate_path(option, uri)
+        path = uri.path
         fail_if option == true  && path == "/" || path == ""
         fail_if option == false && path != "/" && path != ""
         fail_if option.is_a?(Regexp) && path !~ option
       end
 
-      def validate_query(option, query)
-        fail_unless query.present? == option
+      def validate_query(option, uri)
+        fail_unless uri.query.present? == option
       end
 
-      def validate_fragment(option, fragment)
-        fail_unless fragment.present? == option
+      def validate_fragment(option, uri)
+        fail_unless uri.fragment.present? == option
       end
 
       def validate_authority(option, uri)
