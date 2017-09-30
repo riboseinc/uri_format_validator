@@ -57,11 +57,8 @@ module UriFormatValidator
       RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
 
       def do_checks(uri_string)
-        begin
-          uri = URI(uri_string)
-        rescue URI::InvalidURIError
-          fail_if true
-        end
+        uri = string_to_uri(uri_string)
+        fail_unless uri
 
         if accept_relative_uris?
           validate_domain_absense(uri)
@@ -76,6 +73,15 @@ module UriFormatValidator
           next unless options.key?(prop)
           send(:"validate_#{prop}", options[prop], uri.send(prop))
         end
+      end
+
+      # Warning!  The +URI+ method behaviour is inconsistent across VMs.
+      # For instance, Rubinius allows leading and trailing spaces.  Non-nil
+      # return value doesn't guarantee that URI is indeed well-formed.
+      def string_to_uri(uri_string)
+        URI(uri_string)
+      rescue URI::InvalidURIError
+        nil
       end
 
       def set_failure_message(record, attribute)
