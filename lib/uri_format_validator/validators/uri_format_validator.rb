@@ -64,15 +64,10 @@ module UriFormatValidator
           validate_domain_absense(uri)
         else
           validate_domain(uri_string)
-          validate_authority(options[:authority], uri) if options.key?(:authority)
-          validate_scheme(options[:scheme], uri) if options.key?(:scheme)
-          validate_resolvability(options[:resolvability], uri) if options.key?(:resolvability)
+          validate_against_options(uri, :authority, :scheme, :resolvability)
         end
 
-        %i[path query fragment].each do |prop|
-          next unless options.key?(prop)
-          send(:"validate_#{prop}", options[prop], uri)
-        end
+        validate_against_options(uri, :path, :query, :fragment)
       end
 
       # Warning!  The +URI+ method behaviour is inconsistent across VMs.
@@ -98,6 +93,13 @@ module UriFormatValidator
 
       def validate_domain(uri)
         fail_unless uri =~ regexp
+      end
+
+      def validate_against_options(uri, *option_keys_list)
+        option_keys_list.each do |option_name|
+          next unless options.key?(option_name)
+          send(:"validate_#{option_name}", options[option_name], uri)
+        end
       end
 
       def validate_scheme(_option, uri)
