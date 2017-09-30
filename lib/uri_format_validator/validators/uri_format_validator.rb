@@ -38,7 +38,7 @@ module UriFormatValidator
           else options[:scheme]
           end
 
-        options[:message] ||= I18n.t("errors.messages.invalid_url")
+        options[:message] ||= I18n.t("errors.messages.invalid_uri")
         super(options)
       end
 
