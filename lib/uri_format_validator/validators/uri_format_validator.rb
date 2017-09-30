@@ -137,12 +137,12 @@ module UriFormatValidator
 
       def validate_resolvability(option, uri)
         case option
-        when :resorvable then validate_resorvable(uri.to_s)
+        when :resolvable then validate_resolvable(uri.to_s)
         when :reachable then validate_reachable(uri)
         when :retrievable then validate_retrievable(uri)
         else
           msg = "Invalid option for 'resolvability', valid options are: \
-                :resorvable, :reachable, :retrievable"
+                :resolvable, :reachable, :retrievable"
           raise ArgumentError.new(msg)
         end
       end
@@ -174,7 +174,7 @@ module UriFormatValidator
 
       # TODO:
       # host exists and resolves to an ip address
-      def validate_resorvable(uri)
+      def validate_resolvable(uri)
         !Resolv.getaddress(uri).nil?
       rescue Resolv::ResolvError, Resolv::ResolvTimeout
         false
