@@ -3,6 +3,7 @@
 
 require "uri_format_validator/version"
 require "uri_format_validator/localization"
+require "uri_format_validator/reacher"
 require "uri_format_validator/validators"
 
 # This is a placeholder...
