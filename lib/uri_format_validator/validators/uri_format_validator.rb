@@ -64,7 +64,7 @@ module UriFormatValidator
           validate_domain_absense(uri)
         else
           validate_domain(uri_string)
-          validate_against_options(uri, :authority, :scheme)
+          validate_against_options(uri, :authority, :scheme, :retrievable)
         end
 
         validate_against_options(uri, :path, :query, :fragment)
@@ -133,6 +133,10 @@ module UriFormatValidator
         if option.is_a?(Hash) && option[:allow_reserved] == false
           check_reserved_domains(uri)
         end
+      end
+
+      def validate_retrievable(option, uri)
+        fail_unless Reacher.new(uri).retrievable? if option
       end
 
       def accept_relative_uris?
