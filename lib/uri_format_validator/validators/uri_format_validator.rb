@@ -53,8 +53,6 @@ module UriFormatValidator
       private
 
       STOP_VALIDATION = Object.new.freeze
-      SUCCESSFUL_HTTP_STATUSES = 200..399
-      RESOLVABILITY_SUPPORTED_SCHEMES = %w[http https].freeze
 
       def do_checks(uri_string)
         uri = string_to_uri(uri_string)
