@@ -282,4 +282,68 @@ RSpec.describe UriFormatValidator::Validators::UriFormatValidator do
       end
     end
   end
+
+  context 'options for "retrievable"' do
+    context "when value is false" do
+      it "allows URI with http scheme which points to retrievable content" do
+        post.url = "http://example.com/relative/path"
+        stub_request(:head, post.url).to_return(status: 200)
+        Post.validates :url, uri_format: { retrievable: false, scheme: :all }
+        expect(post).to be_valid
+      end
+
+      it "allows URI with https scheme which points to retrievable content" do
+        post.url = "https://example.com/relative/path"
+        stub_request(:head, post.url).to_return(status: 200)
+        Post.validates :url, uri_format: { retrievable: false, scheme: :all }
+        expect(post).to be_valid
+      end
+
+      it "allows URI which points to unretrievable content" do
+        post.url = "http://example.com/relative/path"
+        stub_request(:head, post.url).to_return(status: 404)
+        Post.validates :url, uri_format: { retrievable: false, scheme: :all }
+        expect(post).to be_valid
+      end
+
+      it "allows URI which scheme is different than http or https" do
+        pending "The list of allowed schemes is broken, see issue #62"
+        post.url = "ssh://git@github.com:riboseinc/uri_format_validator.git"
+        stub_request(:head, post.url).to_return(status: 200)
+        Post.validates :url, uri_format: { retrievable: false, scheme: :all }
+        expect(post).to be_valid
+      end
+    end
+
+    context "when value is true" do
+      it "allows URI with http scheme which points to retrievable content" do
+        post.url = "http://example.com/relative/path"
+        stub_request(:head, post.url).to_return(status: 200)
+        Post.validates :url, uri_format: { retrievable: true, scheme: :all }
+        expect(post).to be_valid
+      end
+
+      it "allows URI with https scheme which points to retrievable content" do
+        post.url = "https://example.com/relative/path"
+        stub_request(:head, post.url).to_return(status: 200)
+        Post.validates :url, uri_format: { retrievable: true, scheme: :all }
+        expect(post).to be_valid
+      end
+
+      fit "disallows URI which points to unretrievable content" do
+        post.url = "http://example.com/relative/path"
+        stub_request(:head, post.url).to_return(status: 404)
+        Post.validates :url, uri_format: { retrievable: true, scheme: :all }
+        expect(post).to be_invalid
+      end
+
+      it "disallows URI which scheme is different than http or https, \
+          despite :scheme option value" do
+        post.url = "ssh://git@github.com:riboseinc/uri_format_validator.git"
+        stub_request(:head, post.url).to_return(status: 200)
+        Post.validates :url, uri_format: { retrievable: true, scheme: :all }
+        expect(post).to be_invalid
+      end
+    end
+  end
 end
