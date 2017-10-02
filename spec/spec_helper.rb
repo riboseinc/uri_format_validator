@@ -1,8 +1,9 @@
 # (c) Copyright 2017 Ribose Inc.
 #
 
-require "bundler/setup"
-require "uri_format_validator"
+require "bundler"
+Bundler.require :default, :development
+# require "uri_format_validator"
 
 Dir[File.expand_path "../support/**/*.rb", __FILE__].sort.each { |f| require f }
 
