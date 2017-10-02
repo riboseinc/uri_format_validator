@@ -7,9 +7,14 @@ image:https://img.shields.io/travis/riboseinc/uri_format_validator/master.svg[
 image:https://img.shields.io/codeclimate/github/riboseinc/uri_format_validator.svg[
 	"Code Climate", link="https://codeclimate.com/github/riboseinc/uri_format_validator"]
 
-Validate URL formats in ActiveModels.
+== Introduction
 
-== Installation
+This gem provides URI field validator for Rails' Active Model.
+
+UriFormatValidator requires Active Model 4+.  It is tested against MRI 2.2.2+,
+JRuby, and Rubinius in their recent versions.
+
+== Getting started
 
 Add this line to your application's Gemfile:
 
@@ -18,52 +23,92 @@ Add this line to your application's Gemfile:
 gem 'uri_format_validator'
 ----
 
-And then execute:
-
-....
-$ bundle
-....
-
-Or install it yourself as:
-
-....
-$ gem install uri_format_validator
-....
-
-== Usage
-
-Add the following to your model:
+Then install by executing `bundle install`.  You may now define validations
+in your models, like that:
 
 [source,ruby]
 ----
-validates :my_url_attribute, uri_format: true
+class User < ActiveRecord::Base
+  validates :home_site_url, uri_format: true
+end
 ----
 
-Also, an old-fashioned validation helper is provided:
+For your convenience, an old-fashioned validation helper is also provided:
 
 [source,ruby]
 ----
-validates_url_format_of :my_url_attribute
+class User < ActiveRecord::Base
+  validates_uri_format_of :home_site_url
+end
 ----
 
-== Error messages
+== Validation options
 
-You can set the error message as an additional parameter
+=== URI component constraints
+
+You can specify constraints on URI components: scheme, authority, path, query,
+and fragment.
+
+[source,ruby]
+----
+validates :home_site_url, uri_format: { scheme: /https?/ }
+validates :home_site_url, uri_format: { scheme: %w[ssh telnet] }
+
+validates :home_site_url, uri_format: { authority: /\.example\./ }
+validates :home_site_url, uri_format: { authority: %w[example.com example.test] }
+
+# require path component (`/` is not enough)
+validates :home_site_url, uri_format: { path: true }
+# disallow presence of path component
+validates :home_site_url, uri_format: { path: false }
+# match path against regular expression
+validates :home_site_url, uri_format: { path: /regexp/ }
+
+# require query component
+validates :home_site_url, uri_format: { query: true }
+# disallow presence of query component
+validates :home_site_url, uri_format: { query: false }
+
+# require fragment component
+validates :home_site_url, uri_format: { fragment: true }
+# disallow presence of fragment component
+validates :home_site_url, uri_format: { fragment: false }
+----
+
+When `scheme` option is unspecified, only http and https are allowed.
+
+=== Relative URIs
+
+By default, only absolute URIs are valid.  Specify `authority: false` option
+to allow relative and disallow absolute URLs:
+
+[source,ruby]
+----
+validates :home_site_url, uri_format: { authority: false }
+----
+
+=== Reachable URLs
+
+With `retrievable` options, you can ensure that URL indeed points to some
+resource.  A HTTP HEAD request will be performed to that URL, and it must result
+with 2xx status code.  Otherwise, given value is considered invalid.
+
+[source,ruby]
+----
+validates :home_site_url, uri_format: { retrievable: true }
+----
+
+=== Error messages
+
+You can also override the default error message:
 
 [source,ruby]
 ----
 validates :my_url_attribute, uri_format: true, message: 'is not a valid URL'
 ----
 
-or you can use locales:
-
-[source,yaml]
-----
-en:
-  errors:
-    messages:
-      invalid_uri: 'is not a valid URL'
-----
+Alternatively, you can provide your own localization string for
+`errors.messages.invalid_uri` key.
 
 == Development
 
