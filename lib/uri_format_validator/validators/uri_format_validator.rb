@@ -64,7 +64,7 @@ module UriFormatValidator
           validate_domain_absense(uri)
         else
           validate_domain(uri_string)
-          validate_against_options(uri, :authority, :scheme, :resolvability)
+          validate_against_options(uri, :authority, :scheme)
         end
 
         validate_against_options(uri, :path, :query, :fragment)
@@ -135,18 +135,6 @@ module UriFormatValidator
         end
       end
 
-      def validate_resolvability(option, uri)
-        case option
-        when :resolvable then validate_resolvable(uri.to_s)
-        when :reachable then validate_reachable(uri)
-        when :retrievable then validate_retrievable(uri)
-        else
-          msg = "Invalid option for 'resolvability', valid options are: \
-                :resolvable, :reachable, :retrievable"
-          raise ArgumentError.new(msg)
-        end
-      end
-
       def accept_relative_uris?
         options.key?(:authority) && options[:authority] == false
       end
@@ -170,64 +158,6 @@ module UriFormatValidator
         %r{^#{
           protocol
         }[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$}iux
-      end
-
-      # TODO:
-      # host exists and resolves to an ip address
-      def validate_resolvable(uri)
-        !Resolv.getaddress(uri).nil?
-      rescue Resolv::ResolvError, Resolv::ResolvTimeout
-        false
-      rescue
-        nil
-      end
-
-      # uri responds with something
-      def validate_reachable(uri)
-        res = generic_validate_retrievable(uri)
-        if res
-          res.code.to_i != 404
-        else
-          res
-        end
-      end
-
-      # uri responds with 2xx >= x <= 399
-      def validate_retrievable(uri)
-        res = generic_validate_retrievable(uri)
-        if res
-          SUCCESSFUL_HTTP_STATUSES.include?(res.code.to_i)
-        else
-          res
-        end
-      end
-
-      def scheme_supports_resolvability!(uri)
-        sch = uri.schema
-        if RESOLVABILITY_SUPPORTED_SCHEMES.include?(sch)
-          true
-        else
-          msg = "The scheme #{sch} not supported for resolvability validation. \
-                Supported schemes: #{REACHABILITY_SUPPORTED_SCHEMES}"
-          raise ArgumentExcpeption.new(msg)
-        end
-      end
-
-      def use_https?(uri)
-        uri.scheme == "https" ||
-          (uri.scheme.nil? && @schemes.try(:include?, "https"))
-      end
-
-      def generic_validate_retrievable(uri)
-        scheme_supports_resolvability!(uri)
-        req = Net::HTTP.new(uri.host, uri.port)
-        req.use_ssl = use_https?(uri)
-        path = uri.path.present? ? uri.path : "/"
-        req.request_head(path)
-      rescue Errno::ENOENT
-        false
-      rescue
-        nil
       end
     end
   end
