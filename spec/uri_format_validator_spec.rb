@@ -12,7 +12,7 @@ RSpec.describe UriFormatValidator::Validators::UriFormatValidator do
 
       post.url = ""
       expect(post).to_not be_valid
-      expect(post.errors.first).to eq([:url, "is not a valid URL"])
+      expect(post.errors.first).to eq([:url, "is not a valid URI"])
     end
 
     it "fails for nil values" do
@@ -20,7 +20,7 @@ RSpec.describe UriFormatValidator::Validators::UriFormatValidator do
 
       post.url = nil
       expect(post).to_not be_valid
-      expect(post.errors.first).to eq([:url, "is not a valid URL"])
+      expect(post.errors.first).to eq([:url, "is not a valid URI"])
     end
 
     it "pass if accept nil values" do

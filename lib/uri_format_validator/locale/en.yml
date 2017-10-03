@@ -1,4 +1,4 @@
 en:
   errors:
     messages:
-      invalid_uri: 'is not a valid URL'
+      invalid_uri: 'is not a valid URI'
