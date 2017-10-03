@@ -1,5 +1,7 @@
 == Not released yet
 
+== 1.0.0
+
 * Improve error message in English, add Polish translation
 * First useful version
 * Rails 4 & 5 compatibility
