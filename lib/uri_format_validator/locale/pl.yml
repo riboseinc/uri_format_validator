@@ -1,0 +1,4 @@
+pl:
+  errors:
+    messages:
+      invalid_uri: 'nie jest poprawnym URI'
