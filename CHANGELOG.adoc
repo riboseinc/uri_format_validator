@@ -1,5 +1,6 @@
 == Not released yet
 
+* Improve error message in English, add Polish translation
 * First useful version
 * Rails 4 & 5 compatibility
 * Basic options for constraining URI components
