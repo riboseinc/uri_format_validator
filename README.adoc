@@ -6,6 +6,8 @@ image:https://img.shields.io/travis/riboseinc/uri_format_validator/master.svg[
 	Build Status, link="https://travis-ci.org/riboseinc/uri_format_validator"]
 image:https://img.shields.io/codeclimate/github/riboseinc/uri_format_validator.svg[
 	"Code Climate", link="https://codeclimate.com/github/riboseinc/uri_format_validator"]
+image:https://img.shields.io/codecov/c/github/riboseinc/uri_format_validator[
+	"Test Coverage", link="https://codecov.io/gh/riboseinc/uri_format_validator"]
 
 == Introduction
 
