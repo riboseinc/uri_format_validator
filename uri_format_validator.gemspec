@@ -27,7 +27,9 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "activemodel", ">= 4.0.0", "< 6"
   spec.add_runtime_dependency "addressable", "~> 2.5"
 
+  spec.add_development_dependency "aruba", "~> 0.14"
   spec.add_development_dependency "bundler", "~> 1.14"
+  spec.add_development_dependency "cucumber", "~> 3.0"
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
