@@ -4,6 +4,9 @@
 require "simplecov"
 SimpleCov.start
 
+require "codecov"
+SimpleCov.formatter = SimpleCov::Formatter::Codecov
+
 require "bundler"
 Bundler.require :default, :development
 # require "uri_format_validator"
