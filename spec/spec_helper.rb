@@ -4,8 +4,10 @@
 require "simplecov"
 SimpleCov.start
 
-require "codecov"
-SimpleCov.formatter = SimpleCov::Formatter::Codecov
+if ENV.key?("CI")
+  require "codecov"
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+end
 
 require "bundler"
 Bundler.require :default, :development
