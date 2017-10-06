@@ -2,6 +2,9 @@ source "https://rubygems.org"
 
 gemspec path: ".."
 
+# These ones are specified here because we don't want them to be autorequired
+# for some reasons.  For instance, Rubocop won't work under Rubinius
+# (dependencies do utilize refinements).
 gem "codecov", require: false, group: :test
 gem "rubocop", require: false
 gem "simplecov", require: false, group: :test
