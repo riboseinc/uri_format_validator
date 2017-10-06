@@ -1,3 +1,4 @@
+# rubocop:disable Security/Eval
 eval File.read(File.expand_path("../common.gemfile", __FILE__))
 
 gem "activemodel", "~> 4.0.0"
