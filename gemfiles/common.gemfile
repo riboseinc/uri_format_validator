@@ -1,7 +1,7 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gemspec path: '..'
+gemspec path: ".."
 
-gem 'codecov', require: false, group: :test
-gem 'rubocop', require: false
-gem 'simplecov', require: false, group: :test
+gem "codecov", require: false, group: :test
+gem "rubocop", require: false
+gem "simplecov", require: false, group: :test
