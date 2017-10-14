@@ -31,7 +31,7 @@ in your models, like that:
 [source,ruby]
 ----
 class User < ActiveRecord::Base
-  validates :home_site_url, uri_format: true
+  validates :home_site_url, uri: true
 end
 ----
 
@@ -53,28 +53,28 @@ and fragment.
 
 [source,ruby]
 ----
-validates :home_site_url, uri_format: { scheme: /https?/ }
-validates :home_site_url, uri_format: { scheme: %w[ssh telnet] }
+validates :home_site_url, uri: { scheme: /https?/ }
+validates :home_site_url, uri: { scheme: %w[ssh telnet] }
 
-validates :home_site_url, uri_format: { authority: /\.example\./ }
-validates :home_site_url, uri_format: { authority: %w[example.com example.test] }
+validates :home_site_url, uri: { authority: /\.example\./ }
+validates :home_site_url, uri: { authority: %w[example.com example.test] }
 
 # require path component (`/` is not enough)
-validates :home_site_url, uri_format: { path: true }
+validates :home_site_url, uri: { path: true }
 # disallow presence of path component
-validates :home_site_url, uri_format: { path: false }
+validates :home_site_url, uri: { path: false }
 # match path against regular expression
-validates :home_site_url, uri_format: { path: /regexp/ }
+validates :home_site_url, uri: { path: /regexp/ }
 
 # require query component
-validates :home_site_url, uri_format: { query: true }
+validates :home_site_url, uri: { query: true }
 # disallow presence of query component
-validates :home_site_url, uri_format: { query: false }
+validates :home_site_url, uri: { query: false }
 
 # require fragment component
-validates :home_site_url, uri_format: { fragment: true }
+validates :home_site_url, uri: { fragment: true }
 # disallow presence of fragment component
-validates :home_site_url, uri_format: { fragment: false }
+validates :home_site_url, uri: { fragment: false }
 ----
 
 When `scheme` option is unspecified, only http and https are allowed.
@@ -86,7 +86,7 @@ to allow relative and disallow absolute URLs:
 
 [source,ruby]
 ----
-validates :home_site_url, uri_format: { authority: false }
+validates :home_site_url, uri: { authority: false }
 ----
 
 === Reachable URLs
@@ -97,7 +97,7 @@ with 2xx status code.  Otherwise, given value is considered invalid.
 
 [source,ruby]
 ----
-validates :home_site_url, uri_format: { retrievable: true }
+validates :home_site_url, uri: { retrievable: true }
 ----
 
 === Error messages
@@ -106,7 +106,7 @@ You can also override the default error message:
 
 [source,ruby]
 ----
-validates :my_url_attribute, uri_format: true, message: 'is not a valid URL'
+validates :my_url_attribute, uri: true, message: 'is not a valid URL'
 ----
 
 Alternatively, you can provide your own localization string for
