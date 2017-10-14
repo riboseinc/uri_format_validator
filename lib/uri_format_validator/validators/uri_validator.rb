@@ -2,7 +2,7 @@
 #
 
 require "active_model"
-require "uri"
+require "addressable"
 require "active_support/core_ext"
 require "net/http"
 require "resolv"
@@ -68,12 +68,9 @@ module UriFormatValidator
         validate_against_options(uri, :path, :query, :fragment)
       end
 
-      # Warning!  The +URI+ method behaviour is inconsistent across VMs.
-      # For instance, Rubinius allows leading and trailing spaces.  Non-nil
-      # return value doesn't guarantee that URI is indeed well-formed.
       def string_to_uri(uri_string)
-        URI(uri_string)
-      rescue URI::InvalidURIError
+        Addressable::URI.parse(uri_string)
+      rescue Addressable::URI::InvalidURIError
         nil
       end
 
