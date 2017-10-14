@@ -1,5 +1,7 @@
 == Not released yet
 
+* Rename validator from `uri_format` to `uri`.
+
 == 0.1.0
 
 * Improve error message in English, add Polish translation
