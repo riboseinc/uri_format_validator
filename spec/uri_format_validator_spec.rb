@@ -3,7 +3,7 @@
 
 require "spec_helper"
 
-RSpec.describe UriFormatValidator::Validators::UriFormatValidator do
+RSpec.describe UriFormatValidator::Validators::UriValidator do
   let(:post) { Post.new }
 
   context "when url field is empty" do

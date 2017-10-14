@@ -12,7 +12,7 @@ module UriFormatValidator
       #     validates_uri_format_of :permalink
       #   end
       def validates_uri_format_of(*attr_names)
-        validates_with UriFormatValidator, _merge_attributes(attr_names)
+        validates_with UriValidator, _merge_attributes(attr_names)
       end
     end
   end

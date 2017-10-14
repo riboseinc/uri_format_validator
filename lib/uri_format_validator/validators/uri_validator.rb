@@ -12,7 +12,7 @@ module UriFormatValidator
     #
     # TODO: documentation
     #
-    class UriFormatValidator < ::ActiveModel::EachValidator
+    class UriValidator < ::ActiveModel::EachValidator
       SCHEMES = %w[
         aaa aaas about acap acct cap cid coap coaps crid data dav dict dns
         example file ftp geo go gopher h323 http https iax icap im imap info ipp
