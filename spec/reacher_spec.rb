@@ -9,7 +9,7 @@ RSpec.describe UriFormatValidator::Reacher do
   let(:reacher) { described_class.new(url) }
 
   it "is initialized with an URL" do
-    expect(described_class.new(url)).to be_instance_of(described_class)
+    expect(described_class.new(double(URI))).to be_instance_of(described_class)
   end
 
   describe "#retrievable?" do
