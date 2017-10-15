@@ -13,7 +13,6 @@ rvm:
   - "2.3"
   - "2.2.2"
   - "ruby-head"
-  - "rbx-3"
   - "jruby"
   - "jruby-head"
 
