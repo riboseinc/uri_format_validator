@@ -2,6 +2,8 @@
 #
 
 require "net/http"
+require "ipaddr"
+require "resolv"
 require "active_support/core_ext/module/delegation"
 
 module UriFormatValidator
@@ -20,6 +22,13 @@ module UriFormatValidator
     # results with 2xx status code.
     def retrievable?
       http_or_https? && head_response.is_a?(Net::HTTPSuccess)
+    end
+
+    # Returns +true+ if hostname component of given +url+ is either an IP
+    # address, or is a domain for which a DNS entry exists.
+    def resolvable?
+      return true if hostname.blank?
+      hostname_is_ip_address? || Resolv.getaddresses(hostname).any?
     end
 
     private
@@ -42,6 +51,10 @@ module UriFormatValidator
 
     def http_or_https?
       %w[http https].include? url.scheme
+    end
+
+    def hostname_is_ip_address?
+      Util.parse_host(hostname).is_a?(IPAddr)
     end
   end
 end
