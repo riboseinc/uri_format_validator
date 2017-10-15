@@ -2,12 +2,15 @@
 #
 
 require "net/http"
+require "active_support/core_ext/module/delegation"
 
 module UriFormatValidator
   # Reacher is a minimalist net client which purpose is to determine whether
   # given URL is resolvable, host is reachable, and content is retrievable.
   class Reacher
     attr_reader :url
+
+    delegate :hostname, :port, :scheme, to: :url
 
     def initialize(url)
       @url = url
@@ -22,7 +25,7 @@ module UriFormatValidator
     private
 
     def head_response
-      Net::HTTP.start(url.hostname, url.port, use_ssl: use_ssl?) do |http|
+      Net::HTTP.start(hostname, port, use_ssl: use_ssl?) do |http|
         http.request_head(url)
       end
     rescue StandardError
@@ -34,7 +37,7 @@ module UriFormatValidator
     end
 
     def use_ssl?
-      url.scheme == "https"
+      scheme == "https"
     end
 
     def http_or_https?
