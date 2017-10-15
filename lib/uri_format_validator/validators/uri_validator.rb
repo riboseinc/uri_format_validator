@@ -14,7 +14,6 @@ module UriFormatValidator
     #
     class UriValidator < ::ActiveModel::EachValidator
       def initialize(options)
-        options[:message] ||= I18n.t("errors.messages.invalid_uri")
         super(options)
       end
 
@@ -44,7 +43,7 @@ module UriFormatValidator
       end
 
       def set_failure_message(record, attribute)
-        record.errors[attribute] << options[:message]
+        record.errors[attribute] << failure_message
       end
 
       def invalid
@@ -60,6 +59,10 @@ module UriFormatValidator
 
       def validate_retrievable(option, uri)
         invalid if option && !Reacher.new(uri).retrievable?
+      end
+
+      def failure_message
+        options[:message] || I18n.t("errors.messages.invalid_uri")
       end
     end
   end
