@@ -6,36 +6,6 @@ require "spec_helper"
 RSpec.describe UriFormatValidator::Validators::UriValidator do
   let(:post) { Post.new }
 
-  context "when url field is empty" do
-    it "fails with default message" do
-      Post.validates :url, uri: true
-
-      post.url = ""
-      expect(post).to_not be_valid
-      expect(post.errors.first).to eq([:url, "is not a valid URI"])
-    end
-
-    it "fails for nil values" do
-      Post.validates :url, uri: true
-
-      post.url = nil
-      expect(post).to_not be_valid
-      expect(post.errors.first).to eq([:url, "is not a valid URI"])
-    end
-
-    it "pass if accept nil values" do
-      Post.validates :url, uri: true, allow_nil: true
-      post.url = nil
-      expect(post).to be_valid
-    end
-
-    it "pass if accept blank values" do
-      Post.validates :url, uri: true, allow_blank: true
-      post.url = ""
-      expect(post).to be_valid
-    end
-  end
-
   context "when url is present" do
     before do
       Post.validates :url, uri: true
