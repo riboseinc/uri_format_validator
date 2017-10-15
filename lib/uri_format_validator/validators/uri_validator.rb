@@ -32,7 +32,7 @@ module UriFormatValidator
 
       def do_checks(uri_string)
         uri = string_to_uri(uri_string)
-        fail_unless uri
+        invalid unless uri
 
         validate_against_options(uri, :retrievable)
       end
@@ -47,12 +47,8 @@ module UriFormatValidator
         record.errors[attribute] << options[:message]
       end
 
-      def fail_if(condition)
-        throw STOP_VALIDATION if condition
-      end
-
-      def fail_unless(condition)
-        fail_if !condition
+      def invalid
+        throw STOP_VALIDATION
       end
 
       def validate_against_options(uri, *option_keys_list)
@@ -63,7 +59,7 @@ module UriFormatValidator
       end
 
       def validate_retrievable(option, uri)
-        fail_unless Reacher.new(uri).retrievable? if option
+        invalid if option && !Reacher.new(uri).retrievable?
       end
     end
   end
