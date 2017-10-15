@@ -7,7 +7,8 @@ RSpec.describe UriFormatValidator::Reacher do
   let(:url_s) { "http://host.example.test/resource" }
 
   it "is initialized with an URL" do
-    expect(described_class.new(double(URI))).to be_instance_of(described_class)
+    object = described_class.new(double(Addressable::URI))
+    expect(object).to be_instance_of(described_class)
   end
 
   describe "#retrievable?" do
@@ -30,7 +31,7 @@ RSpec.describe UriFormatValidator::Reacher do
   end
 
   def retval_for(url)
-    instance = described_class.new(URI(url))
+    instance = described_class.new(Addressable::URI.parse(url))
     bound_method = subject.bind(instance)
     bound_method.call
   end
