@@ -53,8 +53,8 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
     end
   end
 
-  context 'options for "retrievable"' do
-    context "when value is false" do
+  describe ":retrievable option" do
+    context "when is false" do
       it "allows URI with http scheme which points to retrievable content" do
         post.url = "http://example.com/relative/path"
         stub_request(:head, post.url).to_return(status: 200)
@@ -85,7 +85,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
     end
 
-    context "when value is true" do
+    context "when is true" do
       it "allows URI with http scheme which points to retrievable content" do
         post.url = "http://example.com/relative/path"
         stub_request(:head, post.url).to_return(status: 200)
