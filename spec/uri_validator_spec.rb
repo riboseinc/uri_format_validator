@@ -35,6 +35,12 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
 
     invalid_urls.each do |url|
       it "reject invalid url: #{url}" do
+        # Validating URLs requires additional constraints.  Not all valid URIs
+        # with http(s) scheme set are valid URLs.  We used to have a RegExp
+        # for that, but it has been proven to be way too limited.
+        #
+        # Disabling for now, these tests may (should be) reintroduced later.
+        pending "General specs for URL validation have been disabled"
         post.url = url
         expect(post).to_not be_valid
       end
