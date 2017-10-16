@@ -74,7 +74,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
 
       it "allows URI which points to unretrievable content" do
-        post.url = "http://example.com/relative/path"
+        post.url = "http://example.com/does/not/exist"
         stub_request(:head, post.url).to_return(status: 404)
         expect(post).to be_valid
       end
@@ -103,7 +103,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
 
       it "allows URI which points to unretrievable content" do
-        post.url = "http://example.com/relative/path"
+        post.url = "http://example.com/does/not/exist"
         stub_request(:head, post.url).to_return(status: 404)
         expect(post).to be_valid
       end
@@ -132,7 +132,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
 
       it "disallows URI which points to unretrievable content" do
-        post.url = "http://example.com/relative/path"
+        post.url = "http://example.com/does/not/exist"
         stub_request(:head, post.url).to_return(status: 404)
         expect(post).to be_invalid
       end
