@@ -100,7 +100,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
         expect(post).to be_valid
       end
 
-      fit "disallows URI which points to unretrievable content" do
+      it "disallows URI which points to unretrievable content" do
         post.url = "http://example.com/relative/path"
         stub_request(:head, post.url).to_return(status: 404)
         Post.validates :url, uri: { retrievable: true, scheme: :all }
