@@ -72,24 +72,20 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       let(:validation_options) { { scheme: :all } }
 
       it "allows URI with http scheme which points to retrievable content" do
-        post.url = retrievable_http_url
-        expect(post).to be_valid
+        allow_uri(retrievable_http_url)
       end
 
       it "allows URI with https scheme which points to retrievable content" do
-        post.url = retrievable_https_url
-        expect(post).to be_valid
+        allow_uri(retrievable_https_url)
       end
 
       it "allows URI which points to unretrievable content" do
-        post.url = unretrievable_http_url
-        expect(post).to be_valid
+        allow_uri(unretrievable_http_url)
       end
 
       it "allows URI which scheme is different than http or https" do
         pending "The list of allowed schemes is broken, see issue #62"
-        post.url = retrievable_ssh_url
-        expect(post).to be_valid
+        allow_uri(retrievable_ssh_url)
       end
     end
 
@@ -97,24 +93,20 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       let(:validation_options) { { retrievable: false, scheme: :all } }
 
       it "allows URI with http scheme which points to retrievable content" do
-        post.url = retrievable_http_url
-        expect(post).to be_valid
+        allow_uri(retrievable_http_url)
       end
 
       it "allows URI with https scheme which points to retrievable content" do
-        post.url = retrievable_https_url
-        expect(post).to be_valid
+        allow_uri(retrievable_https_url)
       end
 
       it "allows URI which points to unretrievable content" do
-        post.url = unretrievable_http_url
-        expect(post).to be_valid
+        allow_uri(unretrievable_http_url)
       end
 
       it "allows URI which scheme is different than http or https" do
         pending "The list of allowed schemes is broken, see issue #62"
-        post.url = retrievable_ssh_url
-        expect(post).to be_valid
+        allow_uri(retrievable_ssh_url)
       end
     end
 
@@ -122,25 +114,32 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       let(:validation_options) { { retrievable: true, scheme: :all } }
 
       it "allows URI with http scheme which points to retrievable content" do
-        post.url = retrievable_http_url
-        expect(post).to be_valid
+        allow_uri(retrievable_http_url)
       end
 
       it "allows URI with https scheme which points to retrievable content" do
-        post.url = retrievable_https_url
-        expect(post).to be_valid
+        allow_uri(retrievable_https_url)
       end
 
       it "disallows URI which points to unretrievable content" do
-        post.url = unretrievable_http_url
-        expect(post).to be_invalid
+        disallow_uri(unretrievable_http_url)
       end
 
       it "disallows URI which scheme is different than http or https, \
           despite :scheme option value" do
-        post.url = retrievable_ssh_url
-        expect(post).to be_invalid
+        disallow_uri(retrievable_ssh_url)
       end
     end
+  end
+
+  def allow_uri(uri_string)
+    post.url = uri_string
+    expect(post).to be_valid
+  end
+
+  def disallow_uri(uri_string)
+    post.url = uri_string
+    expect(post).to be_invalid
+    expect(post.errors[:url]).to be_present
   end
 end
