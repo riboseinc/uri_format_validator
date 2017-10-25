@@ -69,7 +69,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
     end
 
     context "when unspecified" do
-      let(:validation_options) { { scheme: :all } }
+      let(:validation_options) { {} }
 
       it "allows URI with http scheme which points to retrievable content" do
         allow_uri(retrievable_http_url)
@@ -90,7 +90,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
     end
 
     context "when is false" do
-      let(:validation_options) { { retrievable: false, scheme: :all } }
+      let(:validation_options) { { retrievable: false } }
 
       it "allows URI with http scheme which points to retrievable content" do
         allow_uri(retrievable_http_url)
@@ -111,7 +111,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
     end
 
     context "when is true" do
-      let(:validation_options) { { retrievable: true, scheme: :all } }
+      let(:validation_options) { { retrievable: true } }
 
       it "allows URI with http scheme which points to retrievable content" do
         allow_uri(retrievable_http_url)
