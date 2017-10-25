@@ -336,10 +336,6 @@ Lint/HandleExceptions:
   Description: Don't suppress exception.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#dont-hide-exceptions
   Enabled: false
-Lint/InvalidCharacterLiteral:
-  Description: Checks for invalid character literals with a non-escaped whitespace
-    character.
-  Enabled: false
 Lint/LiteralInCondition:
   Description: Checks of literals used in conditions.
   Enabled: false
@@ -687,10 +683,6 @@ Style/Encoding:
   Description: Use UTF-8 as the source file encoding.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#utf-8
   Enabled: false
-  EnforcedStyle: always
-  SupportedStyles:
-  - when_needed
-  - always
 Style/EndBlock:
   Description: Avoid the use of END blocks.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-END-blocks
