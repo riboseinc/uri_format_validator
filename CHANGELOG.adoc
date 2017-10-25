@@ -1,6 +1,11 @@
 == Not released yet
 
-* Rename validator from `uri_format` to `uri`.
+== 0.2.0
+
+* Drop support for Rubinius
+* Rename validator from `uri_format` to `uri`
+* Add first Cucumber + Aruba living documentation
+* Switch to Addressable's URI parser
 
 == 0.1.0
 
