@@ -53,6 +53,89 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
     end
   end
 
+  describe ":host option" do
+    let(:http_uri) { "http://example.com/relative/path" }
+    let(:https_uri) { "https://another.example.com/different/path" }
+    let(:http_ipv6_uri) { "http://[::1]/relative/path" }
+    let(:local_file_uri) { "file:///dev/null" }
+    let(:urn) { "urn:ISSN:0167-6423" }
+
+    before do
+      Post.validates :url, uri: validation_options
+    end
+
+    context "when unspecified" do
+      let(:validation_options) { {} }
+
+      it "allows URIs with any host subcomponent" do
+        allow_uri(http_uri)
+        allow_uri(https_uri)
+        allow_uri(http_ipv6_uri)
+      end
+
+      it "allows URIs which host subcomponent is missing" do
+        allow_uri(local_file_uri)
+        allow_uri(urn)
+      end
+    end
+
+    context "when is false" do
+      let(:validation_options) { { host: false } }
+
+      it "allows URIs with any host subcomponent" do
+        allow_uri(http_uri)
+        allow_uri(https_uri)
+        allow_uri(http_ipv6_uri)
+      end
+
+      it "allows URIs which host subcomponent is missing" do
+        allow_uri(local_file_uri)
+        allow_uri(urn)
+      end
+    end
+
+    context "when is a string" do
+      let(:validation_options) { { host: "example.com" } }
+
+      it "allows URIs which host subcomponent equals to specified string" do
+        allow_uri(http_uri)
+      end
+
+      it "disallows URIs which host subcomponent is different than specified \
+          string, even if it's a subdomain of that string" do
+        disallow_uri(https_uri)
+        disallow_uri(http_ipv6_uri)
+      end
+
+      it "disallows URIs which host subcomponent is missing" do
+        disallow_uri(local_file_uri)
+        disallow_uri(urn)
+      end
+    end
+
+    context "when is an array of strings" do
+      let(:validation_options) do
+        { host: ["example.test", "example.com", "::1"] }
+      end
+
+      it "allows URIs which host subcomponent is included in the specified \
+          array" do
+        allow_uri(http_uri)
+        allow_uri(http_ipv6_uri)
+      end
+
+      it "disallows URIs which host subcomponent is not included in \
+          the specified array" do
+        disallow_uri(https_uri)
+      end
+
+      it "disallows URIs which host subcomponent is missing" do
+        disallow_uri(local_file_uri)
+        disallow_uri(urn)
+      end
+    end
+  end
+
   describe ":scheme option" do
     let(:http_uri) { "http://example.com/relative/path" }
     let(:https_uri) { "https://another.example.com/different/path" }
