@@ -33,7 +33,7 @@ module UriFormatValidator
         uri = string_to_uri(uri_string)
         invalid unless uri
 
-        validate_against_options(uri, :scheme, :retrievable)
+        validate_against_options(uri, :scheme, :host, :retrievable)
       end
 
       def string_to_uri(uri_string)
@@ -55,6 +55,11 @@ module UriFormatValidator
           next unless options[option_name]
           send(:"validate_#{option_name}", options[option_name], uri)
         end
+      end
+
+      def validate_host(host_or_hosts, uri)
+        hosts = Array.wrap(host_or_hosts)
+        invalid unless uri.hostname.in?(hosts)
       end
 
       def validate_scheme(scheme_or_schemes, uri)
