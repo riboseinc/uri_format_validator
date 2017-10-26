@@ -53,6 +53,46 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
     end
   end
 
+  describe ":scheme option" do
+    let(:http_uri) { "http://example.com/relative/path" }
+    let(:https_uri) { "https://another.example.com/different/path" }
+    let(:file_uri) { "file:///dev/null" }
+
+    before do
+      Post.validates :url, uri: validation_options
+    end
+
+    context "when unspecified" do
+      let(:validation_options) { {} }
+
+      it "allows URIs with any scheme" do
+        allow_uri(http_uri)
+        allow_uri(https_uri)
+        allow_uri(file_uri)
+      end
+    end
+
+    context "when is a string" do
+      let(:validation_options) { { scheme: "https" } }
+
+      it "only allows URIs with scheme equal to passed option" do
+        disallow_uri(http_uri)
+        allow_uri(https_uri)
+        disallow_uri(file_uri)
+      end
+    end
+
+    context "when is an array of strings" do
+      let(:validation_options) { { scheme: ["http", "https"] } }
+
+      it "only allows URIs with schemes included in that array" do
+        allow_uri(http_uri)
+        allow_uri(https_uri)
+        disallow_uri(file_uri)
+      end
+    end
+  end
+
   describe ":retrievable option" do
     let(:retrievable_http_url) { "http://example.com/relative/path" }
     let(:retrievable_https_url) { "https://example.com/relative/path" }
