@@ -72,6 +72,16 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
     end
 
+    context "when is false" do
+      let(:validation_options) { { scheme: false } }
+
+      it "allows URIs with any scheme" do
+        allow_uri(http_uri)
+        allow_uri(https_uri)
+        allow_uri(file_uri)
+      end
+    end
+
     context "when is a string" do
       let(:validation_options) { { scheme: "https" } }
 
