@@ -25,8 +25,11 @@ module UriFormatValidator
       Net::HTTP.start(url.hostname, url.port, use_ssl: use_ssl?) do |http|
         http.request_head(url)
       end
-    rescue
-      # FIXME The rescue-all clause should be replaced with sth specific
+    rescue StandardError
+      # The NET::HTTP may raise so many different errors that listing them all
+      # is IMO pretty pointless.
+      # See: http://tammersaleh.com/posts/rescuing-net-http-exceptions/
+      # for *incomplete* list.
       nil
     end
 
