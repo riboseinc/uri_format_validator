@@ -52,7 +52,7 @@ module UriFormatValidator
 
       def validate_against_options(uri, *option_keys_list)
         option_keys_list.each do |option_name|
-          next unless options.key?(option_name)
+          next unless options[option_name]
           send(:"validate_#{option_name}", options[option_name], uri)
         end
       end
