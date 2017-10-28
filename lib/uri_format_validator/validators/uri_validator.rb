@@ -59,7 +59,7 @@ module UriFormatValidator
 
       def validate_host(host_or_hosts, uri)
         hosts = Array.wrap(host_or_hosts)
-        invalid unless uri.hostname.in?(hosts)
+        invalid unless hosts.any? { |h| h === uri.hostname }
       end
 
       def validate_scheme(scheme_or_schemes, uri)
