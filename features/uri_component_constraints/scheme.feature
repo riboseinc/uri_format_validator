@@ -68,14 +68,14 @@ Feature: Scheme component constraints
       false
       """
 
-  Scenario: When sheme option is an array, it specifies allowed schemes
+  Scenario: When sheme option is a regular expression, it specifies the pattern for allowed schemes
     And a file named "example_model.rb" with:
       """ruby
       class ExampleModel
         include ActiveModel::Validations
 
         attr_accessor :uri
-        validates :uri, uri: { scheme: %w[telnet ssh http] }
+        validates :uri, uri: { scheme: /^https?$/ }
       end
       """
 
@@ -84,8 +84,30 @@ Feature: Scheme component constraints
     Then it should pass with exactly:
       """
       true
+      true
       false
+      false
+      false
+      """
+
+  Scenario: When sheme option is an array, it specifies a set of allowed schemes
+    And a file named "example_model.rb" with:
+      """ruby
+      class ExampleModel
+        include ActiveModel::Validations
+
+        attr_accessor :uri
+        validates :uri, uri: { scheme: ["telnet", /^https?$/] }
+      end
+      """
+
+    When I run `ruby test_example_model.rb`
+
+    Then it should pass with exactly:
+      """
       true
       true
+      true
+      false
       false
       """
