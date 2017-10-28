@@ -175,10 +175,21 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
     end
 
-    context "when is an array of strings" do
-      let(:validation_options) { { scheme: ["http", "https"] } }
+    context "when is a regular expression" do
+      let(:validation_options) { { scheme: /^https?$/ } }
 
-      it "only allows URIs with schemes included in that array" do
+      it "only allows URIs with scheme matching the passed option" do
+        allow_uri(http_uri)
+        allow_uri(https_uri)
+        disallow_uri(file_uri)
+      end
+    end
+
+    context "when is an array of strings or regular expressions" do
+      let(:validation_options) { { scheme: ["http", /s/] } }
+
+      it "only allows URIs with schemes matching any of constraints in \
+          that array" do
         allow_uri(http_uri)
         allow_uri(https_uri)
         disallow_uri(file_uri)

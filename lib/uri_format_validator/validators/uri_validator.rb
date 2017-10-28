@@ -64,7 +64,7 @@ module UriFormatValidator
 
       def validate_scheme(scheme_or_schemes, uri)
         schemes = Array.wrap(scheme_or_schemes)
-        invalid unless uri.scheme.in?(schemes)
+        invalid unless schemes.any? { |s| s === uri.scheme }
       end
 
       def validate_retrievable(option, uri)
