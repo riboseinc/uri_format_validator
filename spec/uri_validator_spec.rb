@@ -113,18 +113,37 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
     end
 
-    context "when is an array of strings" do
-      let(:validation_options) do
-        { host: ["example.test", "example.com", "::1"] }
+    context "when is a regular expression" do
+      let(:validation_options) { { host: /\.example\.com$/ } }
+
+      it "allows URIs which host subcomponent matches the regular expression" do
+        allow_uri(https_uri)
       end
 
-      it "allows URIs which host subcomponent is included in the specified \
-          array" do
+      it "disallows URIs which host subcomponent does not match the regular \
+          expression" do
+        disallow_uri(http_uri)
+        disallow_uri(http_ipv6_uri)
+      end
+
+      it "disallows URIs which host subcomponent is missing" do
+        disallow_uri(local_file_uri)
+        disallow_uri(urn)
+      end
+    end
+
+    context "when is an array of strings or regular expressions" do
+      let(:validation_options) do
+        { host: [/^example\.(com|test)$/, "::1"] }
+      end
+
+      it "allows URIs which host subcomponent matches any element of \
+          the specified array" do
         allow_uri(http_uri)
         allow_uri(http_ipv6_uri)
       end
 
-      it "disallows URIs which host subcomponent is not included in \
+      it "disallows URIs which host subcomponent matches neither element of \
           the specified array" do
         disallow_uri(https_uri)
       end
