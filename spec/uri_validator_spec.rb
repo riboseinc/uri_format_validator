@@ -247,7 +247,6 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
 
       it "allows URI which scheme is different than http or https" do
-        pending "The list of allowed schemes is broken, see issue #62"
         allow_uri(retrievable_ssh_url)
       end
     end
@@ -268,7 +267,6 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
       end
 
       it "allows URI which scheme is different than http or https" do
-        pending "The list of allowed schemes is broken, see issue #62"
         allow_uri(retrievable_ssh_url)
       end
     end
