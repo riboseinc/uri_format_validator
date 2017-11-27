@@ -220,7 +220,7 @@ RSpec.describe UriFormatValidator::Validators::UriValidator do
     let(:retrievable_http_url) { "http://example.com/relative/path" }
     let(:retrievable_https_url) { "https://example.com/relative/path" }
     let(:unretrievable_http_url) { "http://example.com/does/not/exist" }
-    let(:retrievable_ssh_url) { "ssh://git@github.com:riboseinc/some_repo.git" }
+    let(:retrievable_ssh_url) { "ssh://git@github.com/riboseinc/some_repo.git" }
 
     before do
       Post.validates :url, uri: validation_options
