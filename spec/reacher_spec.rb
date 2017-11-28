@@ -28,6 +28,10 @@ RSpec.describe UriFormatValidator::Reacher do
       stub_request(:head, url_s).to_return(status: 500)
       expect(retval_for(url_s)).to be(false)
     end
+
+    it "returns false for URL schemes other than http or https" do
+      expect(retval_for("ssh://host.example.test/resource")).to be(false)
+    end
   end
 
   def retval_for(url)
