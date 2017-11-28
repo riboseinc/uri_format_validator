@@ -16,7 +16,7 @@ module UriFormatValidator
     # Tests whether given +url+ is retrievable, that is making a HEAD request
     # results with 2xx status code.
     def retrievable?
-      head_response.is_a?(Net::HTTPSuccess)
+      http_or_https? && head_response.is_a?(Net::HTTPSuccess)
     end
 
     private
@@ -35,6 +35,10 @@ module UriFormatValidator
 
     def use_ssl?
       url.scheme == "https"
+    end
+
+    def http_or_https?
+      %w[http https].include? url.scheme
     end
   end
 end
