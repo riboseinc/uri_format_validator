@@ -10,21 +10,35 @@ module UriFormatValidator
     # TODO: documentation
     #
     class UriValidator < ::ActiveModel::EachValidator
-      attr_reader :constraints
+      attr_reader :accept_list, :reject_list
+
+      ALLOW_ALL_OPTION_HASH = {}.freeze
 
       def initialize(options)
-        @constraints = Constraints.new(options)
+        build_white_and_black_lists(options)
         super(options)
       end
 
       def validate_each(record, attribute, value)
         uri = string_to_uri(value)
-        unless uri && constraints.match?(uri)
+        unless uri && fits_accept_and_reject_lists? { |c| c.match?(uri) }
           set_failure_message(record, attribute)
         end
       end
 
       private
+
+      def build_white_and_black_lists(options)
+        accept_l, reject_l = options.values_at(:accept, :reject)
+        accept_l ||= reject_l ? [ALLOW_ALL_OPTION_HASH] : options
+
+        @accept_list = Array.wrap(accept_l).map { |o| Constraints.new(o) }
+        @reject_list = Array.wrap(reject_l).map { |o| Constraints.new(o) }
+      end
+
+      def fits_accept_and_reject_lists?(&block)
+        accept_list.any?(&block) && reject_list.none?(&block)
+      end
 
       def string_to_uri(uri_string)
         Addressable::URI.parse(uri_string)
