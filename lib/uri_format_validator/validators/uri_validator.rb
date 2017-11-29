@@ -3,9 +3,6 @@
 
 require "active_model"
 require "addressable"
-require "active_support/core_ext"
-require "net/http"
-require "resolv"
 
 module UriFormatValidator
   module Validators
