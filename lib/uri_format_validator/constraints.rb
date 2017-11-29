@@ -1,11 +1,8 @@
 # (c) Copyright 2017 Ribose Inc.
 #
 
-require "active_model"
-require "addressable"
+require "active_support"
 require "active_support/core_ext"
-require "net/http"
-require "resolv"
 
 module UriFormatValidator
   class Constraints
