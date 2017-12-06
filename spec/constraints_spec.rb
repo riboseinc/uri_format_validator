@@ -8,7 +8,8 @@ RSpec.describe UriFormatValidator::Constraints do
 
   describe ":host option" do
     let(:http_uri) { "http://example.com/relative/path" }
-    let(:https_uri) { "https://another.example.com/different/path" }
+    let(:https_uri) { "https://example.com/different/path" }
+    let(:subdomain_uri) { "http://another.example.com/different/path" }
     let(:http_ipv6_uri) { "http://[::1]/relative/path" }
     let(:local_file_uri) { "file:///dev/null" }
     let(:urn) { "urn:ISSN:0167-6423" }
@@ -23,6 +24,7 @@ RSpec.describe UriFormatValidator::Constraints do
       it "allows URIs with any host subcomponent" do
         allow_uri(http_uri)
         allow_uri(https_uri)
+        allow_uri(subdomain_uri)
         allow_uri(http_ipv6_uri)
       end
 
@@ -38,6 +40,7 @@ RSpec.describe UriFormatValidator::Constraints do
       it "allows URIs with any host subcomponent" do
         allow_uri(http_uri)
         allow_uri(https_uri)
+        allow_uri(subdomain_uri)
         allow_uri(http_ipv6_uri)
       end
 
@@ -52,11 +55,12 @@ RSpec.describe UriFormatValidator::Constraints do
 
       it "allows URIs which host subcomponent equals to specified string" do
         allow_uri(http_uri)
+        allow_uri(https_uri)
       end
 
       it "disallows URIs which host subcomponent is different than specified \
           string, even if it's a subdomain of that string" do
-        disallow_uri(https_uri)
+        disallow_uri(subdomain_uri)
         disallow_uri(http_ipv6_uri)
       end
 
@@ -70,12 +74,13 @@ RSpec.describe UriFormatValidator::Constraints do
       let(:validation_options) { { host: /\.example\.com$/ } }
 
       it "allows URIs which host subcomponent matches the regular expression" do
-        allow_uri(https_uri)
+        allow_uri(subdomain_uri)
       end
 
       it "disallows URIs which host subcomponent does not match the regular \
           expression" do
         disallow_uri(http_uri)
+        disallow_uri(https_uri)
         disallow_uri(http_ipv6_uri)
       end
 
@@ -93,12 +98,13 @@ RSpec.describe UriFormatValidator::Constraints do
       it "allows URIs which host subcomponent matches any element of \
           the specified array" do
         allow_uri(http_uri)
+        allow_uri(https_uri)
         allow_uri(http_ipv6_uri)
       end
 
       it "disallows URIs which host subcomponent matches neither element of \
           the specified array" do
-        disallow_uri(https_uri)
+        disallow_uri(subdomain_uri)
       end
 
       it "disallows URIs which host subcomponent is missing" do
