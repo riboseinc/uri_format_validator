@@ -124,6 +124,11 @@ number in `version.rb`, and then run `bundle exec rake release`, which
 will create a git tag for the version, push git commits and tags, and
 push the `.gem` file to https://rubygems.org[rubygems.org].
 
+Documentation for this gem is hosted at 
+Relish[https://relishapp.com/ribose/uri-format-validator/docs].
+
+To upload documentation, run `relish push ribose/uri-format-validator`.
+
 == Contributing
 
 Bug reports and pull requests are welcome on GitHub at
