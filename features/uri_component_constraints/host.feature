@@ -1,4 +1,12 @@
 Feature: Host component constraints
+  URI host may be limited to certain values by passing a string, an array of
+  strings, or a regular expression in the `host` option.  Domain names, IPv4,
+  and IPv6 addresses are supported.
+
+  IPv6 addresses should be written without surrounding brackets, and may be
+  written using the shortened form (e.g. `0:0:0:0:0:0:0:1` and `::1` are
+  equivalent`).
+
   Scenario: By default, accept every valid URI
     Given a file named "test_example_model.rb" with:
       """ruby

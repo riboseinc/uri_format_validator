@@ -68,6 +68,22 @@ RSpec.describe UriFormatValidator::Constraints do
         disallow_uri(local_file_uri)
         disallow_uri(urn)
       end
+
+      context "which represents an IPv6 address" do
+        let(:validation_options) { { host: "0000::0:1" } }
+
+        it "recognizes various ways of text representation of the address" do
+          # See RFC 4291 "IPv6 Addressing Architecture", section 2.2.
+          # https://tools.ietf.org/html/rfc4291#section-2.2
+          allow_uri("http://[0000::0:1]")
+          allow_uri("http://[0000:0000:0000:0000:0000:0000:0000:0001]")
+          allow_uri("http://[0:0:0:0:0:0:0:1]")
+          allow_uri("http://[::1]")
+          allow_uri("http://[0:0:0::0001]")
+          disallow_uri("http://[::2]")
+          disallow_uri("http://[::]")
+        end
+      end
     end
 
     context "when is a regular expression" do

@@ -41,7 +41,7 @@ module UriFormatValidator
 
     def check_host(host_or_hosts, uri)
       hosts = Array.wrap(host_or_hosts)
-      mismatch unless hosts.any? { |h| h === uri.hostname }
+      mismatch unless hosts.any? { |h| host_matches?(h, uri.hostname) }
     end
 
     def check_scheme(scheme_or_schemes, uri)
@@ -51,6 +51,17 @@ module UriFormatValidator
 
     def check_retrievable(option, uri)
       mismatch if option && !Reacher.new(uri).retrievable?
+    end
+
+    def host_matches?(expectation, candidate)
+      case expectation
+      when Regexp
+        expectation.match(candidate)
+      when String
+        Util.hosts_eql?(expectation, candidate)
+      else
+        false
+      end
     end
   end
 end
