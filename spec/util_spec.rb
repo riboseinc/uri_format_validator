@@ -38,4 +38,37 @@ RSpec.describe UriFormatValidator::Util do
         to be_kind_of(String) & eq("whatever")
     end
   end
+
+  describe "#hosts_eql?" do
+    subject { described_class.method :hosts_eql? }
+
+    example { expect(subject.("::1", "::1")).to be(true) }
+    example { expect(subject.("::1", "0::1")).to be(true) }
+    example { expect(subject.("::1", "127.0.0.1")).to be(false) }
+    example { expect(subject.("::1", "example.com")).to be(false) }
+    example { expect(subject.("::1", "")).to be(false) }
+    example { expect(subject.("::1", nil)).to be(false) }
+    example { expect(subject.("127.0.0.1", "127.0.0.1")).to be(true) }
+    example { expect(subject.("127.0.0.1", "127.0.0.2")).to be(false) }
+    example { expect(subject.("127.0.0.1", "::1")).to be(false) } # yes!
+    example { expect(subject.("127.0.0.1", "example.com")).to be(false) }
+    example { expect(subject.("127.0.0.1", "")).to be(false) }
+    example { expect(subject.("127.0.0.1", nil)).to be(false) }
+    example { expect(subject.("example.com", "example.com")).to be(true) }
+    example { expect(subject.("example.com", "www.example.com")).to be(false) }
+    example { expect(subject.("example.com", "::1")).to be(false) }
+    example { expect(subject.("example.com", "127.0.0.1")).to be(false) }
+    example { expect(subject.("example.com", "")).to be(false) }
+    example { expect(subject.("example.com", nil)).to be(false) }
+    example { expect(subject.("", "")).to be(true) }
+    example { expect(subject.("", nil)).to be(true) }
+    example { expect(subject.("", "::1")).to be(false) }
+    example { expect(subject.("", "example.com")).to be(false) }
+    example { expect(subject.("", "127.0.0.1")).to be(false) }
+    example { expect(subject.(nil, nil)).to be(true) }
+    example { expect(subject.(nil, "")).to be(true) }
+    example { expect(subject.(nil, "::1")).to be(false) }
+    example { expect(subject.(nil, "example.com")).to be(false) }
+    example { expect(subject.(nil, "127.0.0.1")).to be(false) }
+  end
 end
