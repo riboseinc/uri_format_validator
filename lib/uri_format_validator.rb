@@ -2,6 +2,7 @@
 #
 
 require "uri_format_validator/version"
+require "uri_format_validator/util"
 require "uri_format_validator/constraints"
 require "uri_format_validator/localization"
 require "uri_format_validator/reacher"
