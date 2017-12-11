@@ -191,6 +191,83 @@ RSpec.describe UriFormatValidator::Constraints do
     end
   end
 
+  describe ":resolvable option" do
+    # From reserved domains, example.com is resolvable whereas example.test
+    # is not.
+    let(:ip_url) { "http://127.0.0.1/relative/path" }
+    let(:resolvable_url) { "http://example.com/relative/path" }
+    let(:unresolvable_url) { "http://example.test/relative/path" }
+    let(:local_file_url) { "file:///dev/null" }
+    let(:urn) { "urn:ISSN:0167-6423" }
+
+    before do
+      Post.validates :url, uri: validation_options
+    end
+
+    context "when unspecified" do
+      let(:validation_options) { {} }
+
+      it "allows URI with an IP address" do
+        allow_uri(ip_url)
+      end
+
+      it "allows URI with a resolvable domain address" do
+        allow_uri(resolvable_url)
+      end
+
+      it "allows URI with a non-resolvable domain address" do
+        allow_uri(unresolvable_url)
+      end
+
+      it "allows URI with host unspecified" do
+        allow_uri(local_file_url)
+        allow_uri(urn)
+      end
+    end
+
+    context "when is false" do
+      let(:validation_options) { { resolvable: false } }
+
+      it "allows URI with an IP address" do
+        allow_uri(ip_url)
+      end
+
+      it "allows URI with a resolvable domain address" do
+        allow_uri(resolvable_url)
+      end
+
+      it "allows URI with a non-resolvable domain address" do
+        allow_uri(unresolvable_url)
+      end
+
+      it "allows URI with host unspecified" do
+        allow_uri(local_file_url)
+        allow_uri(urn)
+      end
+    end
+
+    context "when is true" do
+      let(:validation_options) { { resolvable: true } }
+
+      it "allows URI with an IP address" do
+        allow_uri(ip_url)
+      end
+
+      it "allows URI with a resolvable domain address" do
+        allow_uri(resolvable_url)
+      end
+
+      it "disallows URI with a non-resolvable domain address" do
+        disallow_uri(unresolvable_url)
+      end
+
+      it "still allows URI with host unspecified" do
+        allow_uri(local_file_url)
+        allow_uri(urn)
+      end
+    end
+  end
+
   describe ":retrievable option" do
     let(:retrievable_http_url) { "http://example.com/relative/path" }
     let(:retrievable_https_url) { "https://example.com/relative/path" }
