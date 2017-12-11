@@ -25,7 +25,7 @@ module UriFormatValidator
     URI_MISMATCH = Object.new.freeze
 
     def do_checks(uri)
-      check_against_options(uri, :scheme, :host, :retrievable)
+      check_against_options(uri, :scheme, :host, :resolvable, :retrievable)
     end
 
     def mismatch
@@ -47,6 +47,10 @@ module UriFormatValidator
     def check_scheme(scheme_or_schemes, uri)
       schemes = Array.wrap(scheme_or_schemes)
       mismatch unless schemes.any? { |s| s === uri.scheme }
+    end
+
+    def check_resolvable(option, uri)
+      mismatch if option && !Reacher.new(uri).resolvable?
     end
 
     def check_retrievable(option, uri)
