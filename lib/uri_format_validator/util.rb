@@ -27,7 +27,7 @@ module UriFormatValidator
     # Compare two hosts containing host names (either domain names or IP
     # addresses).  Contrary to IPAddr#==, works reliably in MRI < 2.4 as
     # it does not raise exceptions.
-    def hosts_eql?(a, b)
+    def hosts_eql?(a, b) # rubocop:disable Naming/UncommunicativeMethodParamName
       parse_host(a) == parse_host(b)
     rescue IPAddr::InvalidAddressError
       false
