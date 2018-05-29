@@ -10,6 +10,7 @@ script:
   - bundle exec cucumber
 
 rvm:
+  - "2.5"
   - "2.4"
   - "2.3"
   - "2.2.2"
@@ -22,16 +23,16 @@ gemfile:
 
 matrix:
   include:
-    - rvm: "2.4"
+    - rvm: "2.5"
       gemfile: gemfiles/rails-head.gemfile
 
-    - rvm: "2.4"
+    - rvm: "2.5"
       gemfile: gemfiles/rails-5.1.gemfile
 
-    - rvm: "2.4"
+    - rvm: "2.5"
       gemfile: gemfiles/rails-5.0.gemfile
 
-    - rvm: "2.4"
+    - rvm: "2.5"
       gemfile: gemfiles/rails-4.2.gemfile
 
     # Test Rails 4.0–4.1 against Ruby 2.3
