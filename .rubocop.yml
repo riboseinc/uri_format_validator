@@ -13,3 +13,6 @@ AllCops:
   TargetRubyVersion: 2.2
 Rails:
   Enabled: true
+Security/Eval:
+  Exclude:
+    - "gemfiles/*.gemfile"
