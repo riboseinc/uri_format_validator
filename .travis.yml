@@ -13,6 +13,7 @@ script:
   - bundle exec cucumber
 
 rvm:
+  - "2.6"
   - "2.5"
   - "2.4"
   - "2.3"
@@ -26,9 +27,10 @@ gemfile:
 
 matrix:
   include:
-    - rvm: "2.5"
+    - rvm: "2.6"
       gemfile: gemfiles/rails-head.gemfile
 
+    # Test Rails 4.2–5.1 against Ruby 2.5
     - rvm: "2.5"
       gemfile: gemfiles/rails-5.1.gemfile
 
