@@ -2,8 +2,8 @@
 
 # rubocop:disable Metrics/BlockLength
 
-lib = File.expand_path("lib", __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$:.push File.expand_path('lib', __dir__)
+
 require "uri_format_validator/version"
 
 Gem::Specification.new do |spec|
