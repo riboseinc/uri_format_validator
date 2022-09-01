@@ -35,6 +35,15 @@ class User < ActiveRecord::Base
 end
 ----
 
+For Rails 6, you may need to specify the namespace like that:
+
+[source,ruby]
+----
+class User < ActiveRecord::Base
+  validates :home_site_url, 'uri_format_validator/validators/uri': true,
+end
+----
+
 For your convenience, an old-fashioned validation helper is also provided:
 
 [source,ruby]
