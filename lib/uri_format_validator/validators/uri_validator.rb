@@ -41,7 +41,19 @@ module UriFormatValidator
       end
 
       def string_to_uri(uri_string)
-        Addressable::URI.parse(uri_string)
+        uri = Addressable::URI.parse(uri_string)
+
+        # no scheme nor host
+        if uri.scheme.nil? || uri.host.nil?
+          return nil 
+        end
+
+        # host does not contain dot with at least one letter
+        unless uri.host.match(/\.[a-zA-z]/)
+          return nil 
+        end
+
+        uri
       rescue Addressable::URI::InvalidURIError
         nil
       end
